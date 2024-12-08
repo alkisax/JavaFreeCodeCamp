@@ -1,0 +1,57 @@
+DOM Manipulation
+document.getElementById(): Selects an element by its ID.
+const calorieCounter = document.getElementById('calorie-counter');
+document.querySelector(): Selects the first matching element in the DOM.
+
+const targetInputContainer = document.querySelector(`#${entryDropdown.value} .input-container`);
+insertAdjacentHTML(position, text): Inserts HTML at a specified position relative to the element.
+
+targetInputContainer.insertAdjacentHTML("beforeend", HTMLString);
+
+Event Handling
+.addEventListener(event, function): Adds an event listener for a specific event.
+
+addEntryButton.addEventListener("click", addEntry);
+calorieCounter.addEventListener("submit", calculateCalories);
+clearButton.addEventListener('click', clearForm);
+
+Functions
+Functions can handle input validation and calculations:
+
+function cleanInputString(str) { /* ... */ }
+function isInvalidInput(str) { /* ... */ }
+function addEntry() { /* ... */ }
+function calculateCalories(e) { /* ... */ }
+function getCaloriesFromInputs(list) { /* ... */ }
+
+Arrays and NodeLists
+document.querySelectorAll(): Returns a NodeList (array-like) of matching elements.
+
+const breakfastNumberInputs = document.querySelectorAll("#breakfast input[type='number']");
+Array.from(): Converts a NodeList to an array to access array methods.
+
+const inputContainers = Array.from(document.querySelectorAll('.input-container'));
+
+String Methods
+.match(): Returns an array of matches for a given regular expression.
+
+return str.match(regex);
+Control Flow and Error Handling
+if statements for error handling and conditional checks.
+
+if (isError) {
+  return;
+}
+
+Template Literals
+Used to construct strings with dynamic values.
+
+const HTMLString = `
+  <label for="${entryDropdown.value}-${entryNumber}-name">Entry ${entryNumber} Name</label>
+  <input type="text" id="${entryDropdown.value}-${entryNumber}-name" placeholder="Name" />
+`;
+
+Number and Math Operations
+Number(value): Converts a string to a number.
+
+calories += Number(currVal);

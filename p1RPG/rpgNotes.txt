@@ -1,0 +1,69 @@
+Variables
+let: Used to declare variables that can be reassigned.
+let xp = 0;
+let health = 100;
+
+Array
+Arrays are used to store multiple values in a single variable.
+let inventory = ["stick"];
+
+Objects
+Objects hold collections of data, in key-value pairs.
+const weapons = [
+  { name: 'stick', power: 5 },
+  { name: 'dagger', power: 30 }
+];
+
+DOM Manipulation
+document.querySelector(): Selects the first matching element in the DOM.
+const button1 = document.querySelector('#button1');
+.innerText: Changes or gets the text content of an element.
+text.innerText = "You win!";
+
+Event Handling
+.onclick: Adds an event listener for click events.
+button1.onclick = goStore;
+
+Functions
+Functions are blocks of code that perform a specific task.
+function goTown() {
+  update(locations[0]);
+}
+
+Conditional Statements
+if, else if, else: Used to execute code based on conditions.
+if (health <= 0) {
+  lose();
+} else if (monsterHealth <= 0) {
+  defeatMonster();
+}
+
+Loops
+for: Loops through a block of code a specified number of times.
+for (let i = 0; i < 10; i++) {
+  text.innerText += numbers[i] + "\n";
+}
+
+Math Methods
+Math.floor(): Rounds down to the nearest integer.
+Math.floor(Math.random() * 11); // Random number between 0 and 10
+
+Random Numbers
+Math.random(): Generates a random number between 0 and 1.
+if (Math.random() <= 0.1) {
+  text.innerText += "Your weapon broke.";
+}
+
+Array Methods
+.includes(): Checks if an array contains a certain element.
+if (numbers.includes(guess)) {
+  text.innerText += "You win!";
+}
+
+String Concatenation
++: Concatenates (combines) strings.
+text.innerText = "You attack with " + weapons[currentWeapon].name + ".";
+
+Updating the UI
+Dynamically change content in the UI by updating innerText or innerHTML.
+xpText.innerText = xp;
