@@ -28,8 +28,8 @@ Arrays and NodeLists
 document.querySelectorAll(): Returns a NodeList (array-like) of matching elements.
 
 const breakfastNumberInputs = document.querySelectorAll("#breakfast input[type='number']");
-Array.from(): Converts a NodeList to an array to access array methods.
 
+Array.from(): Converts a NodeList to an array to access array methods.
 const inputContainers = Array.from(document.querySelectorAll('.input-container'));
 
 String Methods
@@ -37,11 +37,6 @@ String Methods
 
 return str.match(regex);
 Control Flow and Error Handling
-if statements for error handling and conditional checks.
-
-if (isError) {
-  return;
-}
 
 Template Literals
 Used to construct strings with dynamic values.
