@@ -4,3 +4,4 @@ git status
 git add .
 git commit -m "Update FreeCodeCamp project with new changes"
 git status
+git push origin main
