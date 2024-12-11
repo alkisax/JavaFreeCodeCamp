@@ -118,16 +118,74 @@ const playSong = (id) => {
   userData.currentSong = song;
   playButton.classList.add("playing");
 
+  highlightCurrentSong(); //66
+  setPlayerDisplay(); //71
   audio.play();
 }
 
-// 17-25
+// 46- 
+const pauseSong = () => {
+  userData.songCurrentTime = audio.currentTime;
+  
+  playButton.classList.remove("playing");
+  audio.pause();
+};
+
+//52 - 60
+const playNextSong = () => {
+
+  if (userData?.currentSong === null) {
+    playSong(userData?.songs[0].id);
+  } else {
+    const currentSongIndex = getCurrentSongIndex();
+    const nextSong = userData?.songs[currentSongIndex + 1];
+
+    playSong(nextSong.id);
+  }
+}
+
+const playPreviousSong = () => {
+  if (userData?.currentSong === null) return;
+  else {
+   const currentSongIndex = getCurrentSongIndex();
+   const previousSong = userData?.songs[currentSongIndex - 1];
+
+   playSong(previousSong.id);
+  }
+};
+
+//67-70
+const setPlayerDisplay = () => {
+  const playingSong = document.getElementById("player-song-title");
+  const songArtist = document.getElementById("player-song-artist");
+  const currentTitle = userData?.currentSong?.title;
+  const currentArtist = userData?.currentSong?.artist;
+
+  playingSong.textContent = currentTitle ? currentTitle : "";
+  songArtist.textContent = currentArtist ? currentArtist : "";
+};
+
+//61 -65
+const highlightCurrentSong = () => {
+  const playlistSongElements = document.querySelectorAll(".playlist-song");
+  const songToHighlight = document.getElementById(
+    `song-${userData?.currentSong?.id}`
+  );
+
+  playlistSongElements.forEach((songEl) => {
+    songEl.removeAttribute("aria-current");
+  });
+
+  if (songToHighlight) songToHighlight.setAttribute("aria-current", "true");
+};
+
+// 17-25 +45
 const renderSongs = (array) => {
   const songsHTML = array
     .map((song)=> {
       return `
       <li id="song-${song.id}" class="playlist-song">
-      <button class="playlist-song-info">
+      <button class="playlist-song-info" onclick="playSong(${song.id})">
           <span class="playlist-song-title">${song.title}</span>
           <span class="playlist-song-artist">${song.artist}</span>
           <span class="playlist-song-duration">${song.duration}</span>
@@ -144,7 +202,26 @@ const renderSongs = (array) => {
   playlistSongs.innerHTML = songsHTML;
 };
 
-//42-
+//72
+const setPlayButtonAccessibleText = () => {};
+
+//50 
+const getCurrentSongIndex = () => {
+  return userData?.songs.indexOf(userData?.currentSong);
+};
+
+//42-45
+playButton.addEventListener("click", () => {
+  if(userData?.currentSong === null) {
+    playSong(userData?.songs[0].id);
+  } else {
+    playSong(userData?.currentSong.id);
+  }
+});
+
+pauseButton.addEventListener("click", pauseSong) //49
+nextButton.addEventListener("click", playNextSong); //56
+previousButton.addEventListener("click", playPreviousSong); //60
 
 //27-34
 const sortSongs = () => {
