@@ -1,0 +1,57 @@
+In JavaScript, there are many built-in constructors that create objects. A constructor is like a regular function, but starts with a capital letter, and is initialized with the new operator.
+For example, you can use the Date() constructor with the new operator to create a new Date object that returns a string with the current date and time:
+Example Code
+const currentDate = new Date();
+console.log(currentDate);
+// Output:
+// Mon Aug 23 2021 15:31:00 GMT-0400 (Eastern Daylight Time)
+One of those is the .getDate() method, which returns a number between 1 and 31 that represents the day of the month for that date. For example:
+Example Code
+const date = new Date();
+const dayOfTheMonth = date.getDate();
+console.log(dayOfTheMonth); // 20
+The .getMonth() method returns a number between 0 and 11.
+.getFullYear()
+The .getHours() method returns a number between 0 and 23. 
+.getMinutes()
+
+In JavaScript, the change event is used to detect when the value of an HTML element has changed:
+Example Code
+element.addEventListener("change", () => {  
+});
+Attach the addEventListener
+
+A switch statement is used to compare an expression against multiple possible values and execute different code blocks based on the match. It's commonly used for branching logic.
+
+For example, here's how to compare the expression dayOfWeek against possible values:
+
+Example Code
+switch (dayOfWeek) {
+  case 1:
+    console.log("It's Monday!");
+    break;
+  case 2:
+    console.log("It's Tuesday!");
+    break;
+  // ...cases for other workdays
+  default:
+    console.log("It's the weekend!");
+}
+
+The split() method is used to divide a string into substrings based on a specified separator. It then returns these substrings as elements of an array.
+Here is an example of taking the words "Hello World" and returning an array of one element:
+Example Code
+const greeting = "Hello World";
+greeting.split(); // ["Hello World"]
+
+To reverse an array of elements, you can use the reverse method. This method reverses the order of the elements in the array in place. The first element becomes the last, and the last element becomes the first.
+Here is an example of using the reverse method:
+Example Code
+// returns [5, 4, 3, 2, 1]
+[1, 2, 3, 4, 5].reverse(); 
+
+join method. This method takes an array of elements and joins them into a string. Similar to the split method, the join method also takes an optional separator. If you don't provide a separator, the default separator is a comma.
+Here is an example of using the join method:
+Example Code
+// returns "1-2-3-4-5"
+[1, 2, 3, 4, 5].join("-");
