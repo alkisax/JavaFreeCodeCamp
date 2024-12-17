@@ -3,3 +3,46 @@ The toggle method will add the class if it is not present on the element, and re
 Example Code
 element.classList.toggle("class-to-toggle");
 Add an event listener to the openTaskFormBtn element and pass in a "click"
+
+The HTML dialog element has a showModal() method that can be used to display a modal dialog box on a web page.
+Example Code
+dialogElement.showModal();
+The HTML dialog element has a close() method that can be used to close a modal dialog box on a web page.
+Example Code
+dialogElement.close();
+
+The findIndex() array method finds and returns the index of the first element in an array that meets the criteria specified by a provided testing callback function. If no such element is found, the method returns -1. The callback should return a truthy value to indicate a matching element has been found, and a falsy value otherwise.
+Here's an example:
+Example Code
+const numbers = [3, 1, 5, 6];
+const firstNumLargerThanThree = numbers.findIndex((num) => num > 3);
+console.log(firstNumLargerThanThree); // prints index 2
+
+Date.now() returns the number of milliseconds elapsed since January 1, 1970 00:00:00 UTC.
+Example Code
+console.log(Date.now()); // 1628586800000
+
+unshift() is an array method that is used to add one or more elements to the beginning of an array.
+Example Code
+const arr = [1, 2, 3];
+arr.unshift(0);
+// [0, 1, 2, 3]
+console.log(arr); 
+
+<button type="button" class="btn" onclick="editTask(this)">Edit</button>
+<button type="button" class="btn" onclick="deleteTask(this)">Delete</button>
+
+splice() is an array method that modifies arrays by removing, replacing, or adding elements at a specified index, while also returning the removed elements. It can take up to three arguments: the first one is the mandatory index at which to start, the second is the number of items to remove, and the third is an optional replacement element. Here's an example:
+Example Code
+const fruits = ["mango", "date", "cherry", "banana", "apple"];
+// Remove date and cherry from the array starting at index 1
+const removedFruits = fruits.splice(1, 2);
+console.log(fruits); // [ 'mango', 'banana', 'apple' ]
+console.log(removedFruits); // [ 'date', 'cherry' ]
+
+Step 54
+localStorage offers methods for saving, retrieving, and deleting items. The items you save can be of any JavaScript data type.
+For instance, the setItem() method is used to save an item, and the getItem() method retrieves the item. To delete a specific item, you can utilize the removeItem() method, or if you want to delete all items in the storage, you can use clear().
+Here's how you can save an item:
+Example Code
+localStorage.setItem("key", value); // value could be string, number, or any other data type
