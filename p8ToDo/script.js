@@ -19,7 +19,7 @@ const removeSpecialChars = (string) => {
   };
 
 //36
-const addOrUpdateTask  = () => {΄
+const addOrUpdateTask  = () => {
     if (!titleInput.value.trim()) {
         alert("Please provide a title");
         return;
