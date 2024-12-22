@@ -9,3 +9,44 @@ Example Code
 isNaN("test"); // true
 isNaN(2); // false
 isNaN("3.5"); // false
+
+he setTimeout function takes two arguments: a callback function and a number representing the time in milliseconds to wait before executing the callback function.
+For example, if you wanted to log "Hello, world!" to the console after 3 seconds, you would write:
+Example Code
+setTimeout(() => {
+  console.log("Hello, world!");
+}, 3000);
+
+const callStack = [
+    'a(): returns "freeCodeCamp " + b()',
+    'b(): returns "is " + c()',
+    "c(): returns 'awesome!'"
+
+];
+
+const a = () => {
+    return "freeCodeCamp " + b();
+};
+
+const b = () => {
+    return "is " + c()
+};
+
+const c = () => {
+    return "awesome!";
+};
+
+console.log(a());
+
+///
+const countDownAndUp = (number) => {
+    console.log(number);
+
+    if (number === 0) {
+        console.log("Reached base case");
+        return;
+    } else {
+        countDownAndUp(number - 1);
+        console.log(number);
+    }
+};
