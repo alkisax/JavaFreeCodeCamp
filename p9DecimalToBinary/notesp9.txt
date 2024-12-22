@@ -1,0 +1,11 @@
+A good way to check and normalize numbers in JavaScript is to use the built-in parseInt() function, which converts a string into an integer or whole number. parseInt() takes at least one argument, a string to be converted into an integer, and returns either an integer or NaN which stands for Not a Number. For example:
+Example Code
+parseInt(2.2); // 2
+parseInt("2e+3"); // 2
+parseInt("e") // NaN
+
+To do that, you can use the isNaN() function. This function takes in a string or number as an argument, and returns true if it evaluates to NaN. For example:
+Example Code
+isNaN("test"); // true
+isNaN(2); // false
+isNaN("3.5"); // false
