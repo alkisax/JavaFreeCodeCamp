@@ -1,0 +1,10 @@
+event.preventDefault();
+
+The Number() function in JavaScript is a built-in method that converts a value to a number. If the value cannot be converted, it returns NaN
+
+array.forEach(function(element, index, array) {
+  // Code to execute on each element
+});
+numbers.forEach((number, index) => {
+  console.log(`Index: ${index}, Value: ${number}`);
+});
