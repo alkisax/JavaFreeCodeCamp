@@ -1,0 +1,17 @@
+nstead of using the .match() method, you can use the .test() method of a regular expression to test if a string matches the pattern. Unlike .match(), .test() returns a boolean value indicating whether or not the string matches the pattern.
+
+Arrays have a .some() method. Like the .filter() method, .some() accepts a callback function which should take an element of the array as the argument. The .some() method will return true if the callback function returns true for at least one element in the array.
+
+Here is an example of a .some() method call to check if any element in the array is an uppercase letter.
+
+Example Code
+const arr = ["A", "b", "C"];
+arr.some(letter => letter === letter.toUpperCase());
+
+? quantifier matches zero or one
+The * quantifier means "match the previous character 0 or more times".
+\s character class matches whitespace
+The regex symbol for matching one or more of the preceding character or group is the + symbol.
+To create a non-capturing group in a regular expression, you can add ?: after the opening parenthesis of a group. For instance, (?:a|b) will match either a or b, but it will not capture the result.
+
+
