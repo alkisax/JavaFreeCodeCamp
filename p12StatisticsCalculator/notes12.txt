@@ -1,0 +1,24 @@
+const numbers = array.map(el => Number(el));
+const filtered = numbers.filter((el) => {!isNaN(el)});
+
+Like the other methods, .reduce() takes a callback. This callback, however, takes at least two parameters. The first is the accumulator, and the second is the current element in the array. The return value for the callback becomes the value of the accumulator on the next iteration.
+Example Code
+array.reduce((acc, el) => {
+    return acc + el;
+});
+
+If you test your form with a list of numbers, you should see the mean display on the page. However, this only works because freeCodeCamp's iframe has special settings. Normally, when a form is submitted, the event triggers a page refresh.
+To resolve this, add return false; after your calculate(); call in the onsubmit attribute.
+<form onsubmit="calculate(); return false;">
+
+if (new Set(Object.values(counts)).size === 1)
+
+const highest = Object.keys(counts);
+
+You previously learned about the global Math object. Math has a .min() method to get the smallest number from a series of numbers, and the .max() method to get the largest number. Here's an example that gets the smallest number from an array:
+Example Code
+const numbersArr = [2, 3, 1];
+console.log(Math.min(...numbersArr));
+// Expected output: 1
+
+Math.pow(base, exponent);
