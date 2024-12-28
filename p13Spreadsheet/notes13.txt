@@ -1,0 +1,20 @@
+window.onload = () => { 
+  // Sets a function to be executed when the entire page (HTML, CSS, and JS) is fully loaded.
+    const container = document.getElementById("container"); 
+  // Selects the HTML element with the ID "container" and stores it in the variable `container`.
+    const createLabel = (name) => { 
+    // Defines a function named `createLabel` that takes one parameter `name`.
+    // This function will create a new label and append it to the container.
+    const label = document.createElement("div"); 
+    // Creates a new <div> element in memory and stores it in the variable `label`.
+    label.className = "label"; 
+    // Assigns the class name "label" to the created <div>, for styling or identification.
+     label.textContent = name; 
+    // Sets the text content of the <div> to the value of the `name` parameter.
+    container.appendChild(label); 
+    // Appends the newly created <div> (label) as a child of the `container` element,
+    // making it part of the visible DOM.
+  }
+};
+
+The Array() constructor has a .fill() method which can be used to fill an array with a value. You can use this to fill your array with the start value.
