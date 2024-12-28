@@ -18,3 +18,11 @@ window.onload = () => {
 };
 
 The Array() constructor has a .fill() method which can be used to fill an array with a value. You can use this to fill your array with the start value.
+
+const input = document.createElement("input");
+input.type = "text";
+input.id = letter + number;
+
+const input = document.createElement("input");
+input.setAttribute("type", "text"); // Sets the type attribute to "text"
+input.setAttribute("id", "input1"); // Sets the id attribute to "input1"
