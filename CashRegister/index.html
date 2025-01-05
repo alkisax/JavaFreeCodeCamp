@@ -8,24 +8,27 @@
     <link rel="stylesheet" href="./style.css">
   </head>
   <body class="bg-black text-white">
+
     <div class="image-div text-center">
       <img class="img-fluid" src="../palindromeChecker/fcclogo.jpg" alt="">
     </div>
+
     <div class="reuslts-header text-center ">
       <h1>
         Cash Register Project
       </h1>
     </div>
+
     <div class="input-area text-center">
       <p>
         Enter cash from customer:
       </p>
-      <input class="customer-input form-control w-25 mx-auto" type="text" >
-      <button class="purchace-btn btn large-btn btn-warning border border-dark mt-3">
+      <input class="customer-input form-control w-25 mx-auto" type="text" id="cash">
+      <button class="purchace-btn btn large-btn btn-warning border border-dark mt-3" id="purchase-btn">
         Purchase
       </button>
       <div class="reuslts-display">
-        <span id="results-span"></span>
+        <span class="results-span" id="change-due"></span>
       </div>
     </div>
 
