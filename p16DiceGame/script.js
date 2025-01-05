@@ -46,6 +46,10 @@ const updateStats = () => {
   roundElement.innerText = round;
 }
 
+const updateRadioOption = (index, score) => {
+
+}
+
 rollDiceBtn.addEventListener("click", () => {
   if (rolls < 3){
     rollDice();
