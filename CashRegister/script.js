@@ -79,7 +79,7 @@ const changeCreator = (resultArray) => {
 
     for (let i = 8; i >= 0; i--) {
         console.log(`Processing ${cid[i][0]}: Current Units Needed: ${resultArray[i]}`);
-        console.log(`Available in Drawer for ${cid[i][0]}: ${cid[i][1]}`);  // Debug line to see the actual value in the drawer
+        console.log(`Available in Drawer for ${cid[i][0]}: ${cid[i][1]}`);  
         const maxUnits = Math.floor(cid[i][1] / (values [i] / 100));
         console.log(`Maximum Units Available in Drawer for ${cid[i][0]}: ${maxUnits}`);
 
@@ -101,8 +101,7 @@ const changeCreator = (resultArray) => {
             console.log(`Remaining Units of ${cid[i][0]} to distribute: ${remainingUnits}`);
             if (i + 1 < 9) {
                 resultArray[i + 1] += Math.ceil(remainingUnits * (values[i] / values[i+1]));
-                // resultArray[i + 1] += remainingUnits;
-            }
+              }
 
 
         } else if (maxUnits === 0) {
@@ -110,7 +109,6 @@ const changeCreator = (resultArray) => {
             console.log(`No Units Available for ${cid[i][0]}, passing ${remainingUnits} units to next denomination`);
             if (i + 1 < 9) {
                 resultArray[i + 1] += Math.ceil(remainingUnits * (values[i] / values[i+1]));
-                // resultArray[i + 1] += remainingUnits;
             }
         }
         console.log(`Result Array after processing ${cid[i][0]}: ${resultArray}`);
