@@ -1,5 +1,9 @@
 let statusC = "CLOSED"
-let price = 1.87;
+let price = 3.26;
+
+const priceTag = document.getElementById("price-tag");
+priceTag.innerText = `Total: ${price}\$`
+
 let cid = [
   ['PENNY', 1.01],
   ['NICKEL', 2.05],
@@ -66,7 +70,8 @@ const changeCalculator = (customerCash) => {
 };
 
 const changeCreator = (resultArray) => {
-
+    console.log("cid:");
+    console.log(cid)
     if (!resultArray) return;
 
     console.log(`Starting Change Creator with Result Array: ${resultArray}`);
@@ -74,7 +79,8 @@ const changeCreator = (resultArray) => {
 
     for (let i = 8; i >= 0; i--) {
         console.log(`Processing ${cid[i][0]}: Current Units Needed: ${resultArray[i]}`);
-        const maxUnits = Math.floor(cid[i][1] / values [i]);
+        console.log(`Available in Drawer for ${cid[i][0]}: ${cid[i][1]}`);  // Debug line to see the actual value in the drawer
+        const maxUnits = Math.floor(cid[i][1] / (values [i] / 100));
         console.log(`Maximum Units Available in Drawer for ${cid[i][0]}: ${maxUnits}`);
 
         if (maxUnits >= resultArray[i]) {
@@ -95,6 +101,7 @@ const changeCreator = (resultArray) => {
             console.log(`Remaining Units of ${cid[i][0]} to distribute: ${remainingUnits}`);
             if (i + 1 < 9) {
                 resultArray[i + 1] += Math.ceil(remainingUnits * (values[i] / values[i+1]));
+                // resultArray[i + 1] += remainingUnits;
             }
 
 
@@ -103,6 +110,7 @@ const changeCreator = (resultArray) => {
             console.log(`No Units Available for ${cid[i][0]}, passing ${remainingUnits} units to next denomination`);
             if (i + 1 < 9) {
                 resultArray[i + 1] += Math.ceil(remainingUnits * (values[i] / values[i+1]));
+                // resultArray[i + 1] += remainingUnits;
             }
         }
         console.log(`Result Array after processing ${cid[i][0]}: ${resultArray}`);
