@@ -31,6 +31,16 @@ const cash = document.getElementById("cash");
 const change = document.getElementById("change-due");
 const button = document.getElementById("purchase-btn");
 
+const displayCid = () => {
+    let cidDisplay = '';
+    for (let i = 0; i < cid.length; i++) {
+      cidDisplay += `<p><strong>${cid[i][0]}:</strong> \$${cid[i][1].toFixed(2)}</p>`;
+    }
+    const cidContainer = document.querySelector('.register-body .card');
+    cidContainer.innerHTML = cidDisplay;
+};
+displayCid();
+
 const sufficientMoneyChecker = (customerCash) => {
     if (price > customerCash) {
         alert("Customer does not have enough money to purchase the item")
@@ -119,6 +129,7 @@ const changeCreator = (resultArray) => {
 };
 
 button.addEventListener("click", () => {
+    displayCid();
     let customerCash = parseFloat(cash.value);
 
     // Check if the input is valid
