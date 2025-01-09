@@ -62,18 +62,34 @@ const sufficientMoneyChecker = (customerCash) => {
     if (price > customerCash) {
         alert("Customer does not have enough money to purchase the item")
         return "INSUFFICIENT FUNDS";
-    } else if (price === customerCash) {
+    } 
+    
+    if (price === customerCash) {
         change.innerText = "No change due - customer paid with exact cash"
         return "CLOSED";
-    } else if (cidTotalCash < moneyChange) {
+    }
+
+    if (cidTotalCash === moneyChange) {
+        let resultString = `Status: CLOSED\n`
+        
+        for (let i = 0; i < cid.length; i++) {
+            if (cid[i][1] > 0) {
+                resultString += `${cid[i][0]}: \$${cid[i][1].toFixed(2)}\n`;
+            }
+        }
+        change.innerText = resultString
+        return "CLOSED"; // Exact match, use all cash
+    } 
+    
+    if (cidTotalCash < moneyChange) {
         change.innerText = `Status: INSUFFICIENT_FUNDS\n`
         return "INSUFFICIENT_FUNDS"    
-    } else if (price < customerCash) {
+    }
+    
+    if (price < customerCash) {
         change.innerText = `Status: OPEN`;
         return "OPEN"
-    } else {
-        return "OPEN";
-    }
+    } 
 }
 
 const changeCalculator = (customerCash) => {
