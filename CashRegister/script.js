@@ -1,20 +1,22 @@
 let statusC = "CLOSED"
-let price = 3.26;
+let price = 19.5;
 
 const priceTag = document.getElementById("price-tag");
 priceTag.innerText = `Total: ${price}\$`
 
-let cid = [
-  ['PENNY', 1.01],
-  ['NICKEL', 2.05],
-  ['DIME', 3.1],
-  ['QUARTER', 4.25],
-  ['ONE', 90],
-  ['FIVE', 55],
-  ['TEN', 20],
-  ['TWENTY', 60],
-  ['ONE HUNDRED', 100]
-];
+// let cid = [
+//   ['PENNY', 1.01],
+//   ['NICKEL', 2.05],
+//   ['DIME', 3.1],
+//   ['QUARTER', 4.25],
+//   ['ONE', 90],
+//   ['FIVE', 55],
+//   ['TEN', 20],
+//   ['TWENTY', 60],
+//   ['ONE HUNDRED', 100]
+// ];
+let cid = [["PENNY", 0.01], ["NICKEL", 0], ["DIME", 0], ["QUARTER", 0], ["ONE", 0], ["FIVE", 0], ["TEN", 0], ["TWENTY", 0], ["ONE HUNDRED", 0]]
+
 const values = [
     1,    // PENNY (1 cent)
     5,    // NICKEL (5 cents)
@@ -82,15 +84,19 @@ const changeCalculator = (customerCash) => {
 const changeCreator = (resultArray) => {
     console.log("cid:");
     console.log(cid)
+
     if (!resultArray) return;
 
     console.log(`Starting Change Creator with Result Array: ${resultArray}`);
+
     let resultString = `Status: ${statusC}\n`
 
     for (let i = 8; i >= 0; i--) {
         console.log(`Processing ${cid[i][0]}: Current Units Needed: ${resultArray[i]}`);
         console.log(`Available in Drawer for ${cid[i][0]}: ${cid[i][1]}`);  
+
         const maxUnits = Math.floor(cid[i][1] / (values [i] / 100));
+
         console.log(`Maximum Units Available in Drawer for ${cid[i][0]}: ${maxUnits}`);
 
         if (maxUnits >= resultArray[i]) {
@@ -98,31 +104,41 @@ const changeCreator = (resultArray) => {
             if (unitsToUse > 0) {
                 resultString += `${cid[i][0]}: \$${(unitsToUse * values[i] / 100).toFixed(2)}\n`;
             } 
-            cid[i][1] -= unitsToUse * values[i];
+            cid[i][1] -= unitsToUse * (values[i] / 100);
+            resultArray[i] = 0;
 
         } else if (maxUnits > 0) {
             const unitsToUse = maxUnits;
+
+            console.log(`Units to use: ${unitsToUse}`)
+
             if (unitsToUse > 0) {
                 resultString += `${cid[i][0]}: \$${(unitsToUse * values[i] / 100).toFixed(2)}\n`;
             }
-            cid[i][1] -= unitsToUse * values[i]; // expect 0
-
+            cid[i][1] -= unitsToUse * (values[i] / 100); // expect 0
             const remainingUnits = resultArray[i] - unitsToUse;
+            const remainingValue = (resultArray[i] - unitsToUse) * (values[i] / 100);
+            // resultArray[i] = 0;
+
             console.log(`Remaining Units of ${cid[i][0]} to distribute: ${remainingUnits}`);
-            if (i + 1 < 9) {
-                resultArray[i + 1] += Math.ceil(remainingUnits * (values[i] / values[i+1]));
+
+            if (i - 1 >= 0) {
+                // resultArray[i - 1] += Math.ceil(remainingUnits * (values[i] / values[i - 1]));
+                resultArray[i - 1] += Math.ceil(remainingValue * 100 / values[i - 1]);
               }
-
-
-        } else if (maxUnits === 0) {
-            const remainingUnits = resultArray[i]
-            console.log(`No Units Available for ${cid[i][0]}, passing ${remainingUnits} units to next denomination`);
-            if (i + 1 < 9) {
-                resultArray[i + 1] += Math.ceil(remainingUnits * (values[i] / values[i+1]));
-            }
+              resultArray[i] = 0;
         }
         console.log(`Result Array after processing ${cid[i][0]}: ${resultArray}`);
     }
+    let totalRemainingValue = 0;
+    for (let i = 0; i < resultArray.length; i++) {
+        totalRemainingValue += resultArray[i] * (values[i] / 100);
+    }
+    if (totalRemainingValue > 0) {
+        change.innerText = "Status: INSUFFICIENT_FUNDS";
+        return;
+    }
+
     resultString = resultString.trim()
     console.log(`Final Result String:\n${resultString}`);
     change.innerText = resultString;
@@ -145,17 +161,3 @@ button.addEventListener("click", () => {
     }
 });
 
-
-
-
-/**
- * 
-
-                // // Calculate the remaining units for the next denomination
-                // let remainingChange = (resultArray[i] - unitsToUse) * values[i];
-                // for (let j = i - 1; j >= 0 && remainingChange > 0; j--) {
-                //     resultArray[j] += Math.floor(remainingChange / values[j]);
-                //     remainingChange %= values[j];
-                // } 
- * 
- */

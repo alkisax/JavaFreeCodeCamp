@@ -1,0 +1,208 @@
+const changeCreator = (resultArray) => {
+    console.log("cid:");
+    console.log(cid)
+    
+    if (!resultArray) return;
+
+    console.log(`Starting Change Creator with Result Array: ${resultArray}`);
+
+    let resultString = `Status: ${statusC}\n`
+
+    for (let i = 8; i >= 0; i--) {
+        console.log(`Processing ${cid[i][0]}: Current Units Needed: ${resultArray[i]}`);
+        console.log(`Available in Drawer for ${cid[i][0]}: ${cid[i][1]}`);  
+
+        const maxUnits = Math.floor(cid[i][1] / (values [i] / 100));
+
+        console.log(`Maximum Units Available in Drawer for ${cid[i][0]}: ${maxUnits}`);
+
+        if (maxUnits >= resultArray[i]) {
+            const unitsToUse = resultArray[i];
+            if (unitsToUse > 0) {
+                resultString += `${cid[i][0]}: \$${(unitsToUse * values[i] / 100).toFixed(2)}\n`;
+            } 
+            cid[i][1] -= unitsToUse * (values[i] / 100);
+
+        } else if (maxUnits > 0) {
+            const unitsToUse = maxUnits;
+            if (unitsToUse > 0) {
+                resultString += `${cid[i][0]}: \$${(unitsToUse * values[i] / 100).toFixed(2)}\n`;
+            }
+            cid[i][1] -= unitsToUse * (values[i] / 100); // expect 0
+
+            const remainingUnits = resultArray[i] - unitsToUse;
+            console.log(`Remaining Units of ${cid[i][0]} to distribute: ${remainingUnits}`);
+            if (i + 1 < 9) {
+                resultArray[i + 1] += Math.ceil(remainingUnits * (values[i] / values[i + 1]));
+              }
+
+
+        } else if (maxUnits === 0) {
+            const remainingUnits = resultArray[i]
+            console.log(`No Units Available for ${cid[i][0]}, passing ${remainingUnits} units to next denomination`);
+            if (i + 1 < 9) {
+                resultArray[i + 1] += Math.ceil(remainingUnits * (values[i] / values[i + 1]));
+            }
+        }
+        console.log(`Result Array after processing ${cid[i][0]}: ${resultArray}`);
+    }
+    resultString = resultString.trim()
+    console.log(`Final Result String:\n${resultString}`);
+    change.innerText = resultString;
+};
+
+
+
+let cid = [
+  ['PENNY', 1.01],
+  ['NICKEL', 2.05],
+  ['DIME', 3.1],
+  ['QUARTER', 4.25],
+  ['ONE', 90],
+  ['FIVE', 55],
+  ['TEN', 20],
+  ['TWENTY', 60],
+  ['ONE HUNDRED', 100]
+];
+const values = [
+    1,    // PENNY (1 cent)
+    5,    // NICKEL (5 cents)
+    10,   // DIME (10 cents)
+    25,   // QUARTER (25 cents)
+    100,  // ONE (100 cents)
+    500,  // FIVE (500 cents)
+    1000, // TEN (1000 cents)
+    2000, // TWENTY (2000 cents)
+    10000 // ONE HUNDRED (10000 cents)
+];
+
+
+lets see some steps
+price 3.26 input 100
+Starting Change Creator with Result Array: 4,0,2,2,1,1,1,4,0
+(im not sure if that step is ok. its not the same as result needed but its going to change as it doesnt find notes in cash)
+ONE HUNDRED: Current Units Needed: 0
+(true 0 needed)
+Available in Drawer for ONE HUNDRED: 100
+(true)
+Available in Drawer for ONE HUNDRED: 1
+(true one note of 100)
+Result Array after processing ONE HUNDRED: 4,0,2,2,1,1,1,4,0
+(true the result array doesnt change)
+TWENTY: Current Units Needed: 4
+(as seen by resutArray[7])
+Available in Drawer for TWENTY: 60
+(true as seen by cid)
+Available in Drawer for TWENTY: 3
+(true. 3 notes of 20)
+Remaining Units of TWENTY to distribute: 1
+(true. we need to pass the value of 20 to next note. so we need to add to te resultArray 2 (as 2 notes of 10$))
+Result Array after processing TWENTY: 4,0,2,2,1,1,1,4,1
+(PROBLEM: why did it add 1 at resultArray[8]? Why did it not remove the value 4 from [7]? it should be 0 since 3 of them where send as a result and the value of remander was send to 10 notes) Why [6] is 1? it sould be 3
+So the array here should be 4,0,2,2,1,1,3,0,0
+
+my changeCreator:
+checks if resultarray is empty and if it is stops
+initialises the rtesultString
+
+starts a for loop for each element of resultArray (starting from the end. the highest note)
+  calculates maxUnites available in this type of note (in $ not in c)
+  if there are enough notes
+    creates a string for this note and adds it the resultString
+    decreases the amount in cid
+    (PROBLEM -  here it should also change the value of resultArray[i] to 0)  else if there are nto enough notes
+    if there are at least some notes
+      creates a new part of the result string
+      decreases the amount in cid
+      (PROBLEM -  here it should also change the value of resultArray[i] to 0)
+      calculates remaining units (in units not in $ or c) (PROBLEM is it in the units of this note? or of the next? it is of this. maybe this causes trouble)
+      then adds the remaining units to the next lower note in result array after fixing the units (is the calculation correct?) (PROBLEM shouldent that be i-1 instead of i+1)
+    if there are no units available (PROBLEM that part is redundant)
+      set remaining units to reuslt array [i]
+      then adds the remaining units to the next lower note in result array after fixing the units (is the calculation correct?) (PROBLEM shouldent that be i-1 instead of i+1)
+
+after finishing with the ifs and fors it adds the final resultString to the dom
+
+so the problem is in this part propably
+        } else if (maxUnits > 0) {
+            const unitsToUse = maxUnits;
+
+            console.log(`Units to use: ${unitsToUse}`)
+
+            if (unitsToUse > 0) {
+                resultString += `${cid[i][0]}: \$${(unitsToUse * values[i] / 100).toFixed(2)}\n`;
+            }
+            cid[i][1] -= unitsToUse * (values[i] / 100); // expect 0
+
+            const remainingUnits = resultArray[i] - unitsToUse;
+
+            console.log(`Remaining Units of ${cid[i][0]} to distribute: ${remainingUnits}`);
+
+            if (i + 1 < 9) {
+                resultArray[i + 1] += Math.ceil(remainingUnits * (values[i] / values[i + 1]));
+              }
+
+
+        } else if (maxUnits === 0) {
+            const remainingUnits = resultArray[i]
+
+            console.log(`No Units Available for ${cid[i][0]}, passing ${remainingUnits} units to next denomination`);
+
+            if (i + 1 < 9) {
+                resultArray[i + 1] += Math.ceil(remainingUnits * (values[i] / values[i + 1]));
+            }
+        }
+   -----------------------------------------
+   this passes 13 but not 12
+
+const changeCreator = (resultArray) => {
+    console.log("cid:");
+    console.log(cid)
+    if (!resultArray) return;
+
+    console.log(`Starting Change Creator with Result Array: ${resultArray}`);
+    let resultString = `Status: ${statusC}\n`
+
+    for (let i = 8; i >= 0; i--) {
+        console.log(`Processing ${cid[i][0]}: Current Units Needed: ${resultArray[i]}`);
+        console.log(`Available in Drawer for ${cid[i][0]}: ${cid[i][1]}`);  
+        const maxUnits = Math.floor(cid[i][1] / (values [i] / 100));
+        console.log(`Maximum Units Available in Drawer for ${cid[i][0]}: ${maxUnits}`);
+
+        if (maxUnits >= resultArray[i]) {
+            const unitsToUse = resultArray[i];
+            if (unitsToUse > 0) {
+                resultString += `${cid[i][0]}: \$${(unitsToUse * values[i] / 100).toFixed(2)}\n`;
+            } 
+            cid[i][1] -= unitsToUse * values[i];
+
+        } else if (maxUnits > 0) {
+            const unitsToUse = maxUnits;
+            if (unitsToUse > 0) {
+                resultString += `${cid[i][0]}: \$${(unitsToUse * values[i] / 100).toFixed(2)}\n`;
+            }
+            cid[i][1] -= unitsToUse * values[i]; // expect 0
+
+            const remainingUnits = resultArray[i] - unitsToUse;
+            console.log(`Remaining Units of ${cid[i][0]} to distribute: ${remainingUnits}`);
+            if (i + 1 < 9) {
+                resultArray[i + 1] += Math.ceil(remainingUnits * (values[i] / values[i+1]));
+              }
+
+
+        } else if (maxUnits === 0) {
+            const remainingUnits = resultArray[i]
+            console.log(`No Units Available for ${cid[i][0]}, passing ${remainingUnits} units to next denomination`);
+            if (i + 1 < 9) {
+                resultArray[i + 1] += Math.ceil(remainingUnits * (values[i] / values[i+1]));
+            }
+        }
+        console.log(`Result Array after processing ${cid[i][0]}: ${resultArray}`);
+    }
+    resultString = resultString.trim()
+    console.log(`Final Result String:\n${resultString}`);
+    change.innerText = resultString;
+};
+
+
+
