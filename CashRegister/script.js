@@ -15,7 +15,11 @@ priceTag.innerText = `Total: ${price}\$`
 //   ['TWENTY', 60],
 //   ['ONE HUNDRED', 100]
 // ];
-let cid = [["PENNY", 0.01], ["NICKEL", 0], ["DIME", 0], ["QUARTER", 0], ["ONE", 0], ["FIVE", 0], ["TEN", 0], ["TWENTY", 0], ["ONE HUNDRED", 0]]
+
+// let cid = [["PENNY", 0.01], ["NICKEL", 0], ["DIME", 0], ["QUARTER", 0], ["ONE", 0], ["FIVE", 0], ["TEN", 0], ["TWENTY", 0], ["ONE HUNDRED", 0]];
+
+let cid = [["PENNY", 0.5], ["NICKEL", 0], ["DIME", 0], ["QUARTER", 0], ["ONE", 0], ["FIVE", 0], ["TEN", 0], ["TWENTY", 0], ["ONE HUNDRED", 0]];
+
 
 const values = [
     1,    // PENNY (1 cent)
@@ -43,13 +47,30 @@ const displayCid = () => {
 };
 displayCid();
 
+const cidTotal = () => {
+    let cidTotalCash = 0;
+    for (let i = 8; i >= 0; i--) {
+        cidTotalCash += cid[i][1] * 100; //all in cents
+    }
+    return cidTotalCash;
+}
+
 const sufficientMoneyChecker = (customerCash) => {
+    const cidTotalCash = cidTotal();
+    const moneyChange = Math.round((customerCash - price) * 100); //make all in cents
+
     if (price > customerCash) {
         alert("Customer does not have enough money to purchase the item")
         return "INSUFFICIENT FUNDS";
     } else if (price === customerCash) {
         change.innerText = "No change due - customer paid with exact cash"
         return "CLOSED";
+    } else if (cidTotalCash < moneyChange) {
+        change.innerText = `Status: INSUFFICIENT_FUNDS\n`
+        return "INSUFFICIENT_FUNDS"    
+    } else if (price < customerCash) {
+        change.innerText = `Status: OPEN`;
+        return "OPEN"
     } else {
         return "OPEN";
     }
