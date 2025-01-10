@@ -203,6 +203,7 @@ const changeCreator = (resultArray) => {
     console.log(`Final Result String:\n${resultString}`);
     change.innerText = resultString;
 };
+.
 
 
 
