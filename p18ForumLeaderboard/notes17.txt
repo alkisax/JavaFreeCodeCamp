@@ -1,0 +1,14 @@
+You can use the async keyword to create an asynchronous function, which returns a promise.
+
+const example = async () => {
+  console.log("this is an example");
+};
+
+The try block is designed to handle potential errors, and the code inside the catch block will be executed in case an error occurs.
+
+try {
+  const name = "freeCodeCamp";
+  name = "fCC";
+} catch (err) {
+  console.log(err); // TypeError: Assignment to constant variable.
+}
