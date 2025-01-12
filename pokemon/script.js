@@ -33,6 +33,8 @@ const fetchPokemons = async () => {
 
 const fetchPokemon = async (nameOrID) => {
   try {
+    nameOrID = !isNaN(nameOrID) ? Number(nameOrID) : nameOrID ;
+    console.log("Search Term:", nameOrID);
     const res = await fetch(`${url}/${nameOrID}`);
     return await res.json();
   } catch (err) {
@@ -53,15 +55,24 @@ const displayPokemon = async (nameOrID) => {
 
     infoContainer.appendChild(spriteImg);
 
+    console.log("Sprite URL:", pokemonDetails.sprites.front_default);
+    console.log("Appending sprite image:", spriteImg);
+
     namePokemon.innerText = `${pokemonDetails.name.toUpperCase()}`;
     idPokemon.innerText = `${pokemonDetails.id}`;
     weight.innerText =`${pokemonDetails.weight}`;
     height.innerText = `${pokemonDetails.height}`;
 
     types.innerHTML = "";
-    const typeElement = document.createElement("span");
-    typeElement.innerText = pokemonDetails.types[0].type.name.toUpperCase();
+    pokemonDetails.types.forEach(typeInfo => {
+      const typeElement = document.createElement("span")
+      typeElement.innerText = `${typeInfo.type.name.toUpperCase()} `
     types.appendChild(typeElement)
+    });
+
+    // const typeElement = document.createElement("span");
+    // typeElement.innerText = pokemonDetails.types[0].type.name.toUpperCase();
+    // types.appendChild(typeElement)
 
     hp.innerText = `${pokemonDetails.stats[0].base_stat}`;
     attack.innerText = `${pokemonDetails.stats[1].base_stat}`;
@@ -87,21 +98,38 @@ const resetDisplay = () => {
   specialAttack.innerText = '';
   specialDefense.innerText = '';
   speed.innerText = '';
+
+  const existingSprite = document.getElementById("sprite");
+  if (existingSprite) {
+    existingSprite.remove();
+  }
 };
 
 searchButton.addEventListener("click", () => {
-  const searchTerm = searchInput.value.toLowerCase().trim(); 
-  
-  fetchPokemons().then(() => {
-    const foundPokemon = pokemonDataArr.find(
-      (pokemon) => pokemon.name.toLowerCase() === searchTerm
-    );
-    if (!foundPokemon) {
-      alert("Pokémon not found"); 
-    } else {
-      displayPokemon(searchTerm);
-    }
-  });
+
+  let searchTerm = searchInput.value.trim(); 
+
+  if (isNaN(searchTerm)) {
+    searchTerm = searchTerm.toLowerCase();
+    fetchPokemons().then(() => {
+      const foundPokemon = pokemonDataArr.find(
+        (pokemon) => pokemon.name.toLowerCase() === searchTerm
+      );
+      if (!foundPokemon) {
+        alert("Pokémon not found"); 
+      } else {
+        displayPokemon(searchTerm);
+      }
+    });
+  } else {
+    fetchPokemon(searchTerm).then(pokemon => {
+      if (!pokemon) {
+        alert("Pokémon not found");
+      } else {
+        displayPokemon(searchTerm);
+      }
+    });
+  }
 });
 
 
