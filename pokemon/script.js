@@ -43,30 +43,51 @@ const fetchPokemon = async (nameOrID) => {
 
 const displayPokemon = async (nameOrID) => {
   try {
+    resetDisplay();
+    
     const pokemonDetails = await fetchPokemon(nameOrID);
 
-    namePokemon.innerText = `Name: ${pokemonDetails.name}`;
-    idPokemon.innerText = `ID: ${pokemonDetails.id}`;
-    weight.innerText =`Weight: ${pokemonDetails.weight}`;
-    height.innerText = `Height: ${pokemonDetails.height}`;
+    const spriteImg = document.createElement("img");
+    spriteImg.src = `${pokemonDetails.sprites.front_default}`;
+    spriteImg.id = "sprite";
 
+    infoContainer.appendChild(spriteImg);
 
-    // types.innerText = `Types: ${pokemonDetails.types
-    //   .map((typeInfo) => typeInfo.type.name)
-    //   .join(", ")}`;
-    hp.innerText = `HP: ${pokemonDetails.stats[0].base_stat}`;
-    attack.innerText = `Attack: ${pokemonDetails.stats[1].base_stat}`;
-    defence.innerText = `Defense: ${pokemonDetails.stats[2].base_stat}`;
-    specialAttack.innerText = `Special Attack: ${pokemonDetails.stats[3].base_stat}`;
-    specialDefense.innerText = `Special Defense: ${pokemonDetails.stats[4].base_stat}`;
-    speed.innerText = `Speed: ${pokemonDetails.stats[5].base_stat}`;
+    namePokemon.innerText = `${pokemonDetails.name.toUpperCase()}`;
+    idPokemon.innerText = `${pokemonDetails.id}`;
+    weight.innerText =`${pokemonDetails.weight}`;
+    height.innerText = `${pokemonDetails.height}`;
+
+    types.innerHTML = "";
+    const typeElement = document.createElement("span");
+    typeElement.innerText = pokemonDetails.types[0].type.name.toUpperCase();
+    types.appendChild(typeElement)
+
+    hp.innerText = `${pokemonDetails.stats[0].base_stat}`;
+    attack.innerText = `${pokemonDetails.stats[1].base_stat}`;
+    defence.innerText = `${pokemonDetails.stats[2].base_stat}`;
+    specialAttack.innerText = `${pokemonDetails.stats[3].base_stat}`;
+    specialDefense.innerText = `${pokemonDetails.stats[4].base_stat}`;
+    speed.innerText = `${pokemonDetails.stats[5].base_stat}`;
   } catch (err) {
     console.error("Error displaying Pokémon:", err);
     alert("Error displaying Pokémon");
   }
 };
 
-const resetDisplay = () => {};
+const resetDisplay = () => {
+  namePokemon.innerText = '';
+  idPokemon.innerText = '';
+  weight.innerText = '';
+  height.innerText = '';
+  types.innerText = '';
+  hp.innerText = '';
+  attack.innerText = '';
+  defence.innerText = '';
+  specialAttack.innerText = '';
+  specialDefense.innerText = '';
+  speed.innerText = '';
+};
 
 searchButton.addEventListener("click", () => {
   const searchTerm = searchInput.value.toLowerCase().trim(); 
@@ -113,10 +134,17 @@ searchButton.addEventListener("click", () => {
 // };
 
 
-  // const pokemonContent = `
-  //   <div>
-  //     <h3>Name: ${pokemon.name}</h3>
-  //     <h3>ID: ${pokemon.id}</h3>
-  //   </div>
-  // `;
-  // infoContainer.innerHTML = pokemonContent;
+// const pokemonContent = `
+//   <div>
+//     <h3>Name: ${pokemon.name}</h3>
+//     <h3>ID: ${pokemon.id}</h3>
+//   </div>
+// `;
+// infoContainer.innerHTML = pokemonContent;
+
+  
+  // types.innerText = `${pokemonDetails.types[0].type.name.toUpperCase()}`;
+
+  // types.innerText = `${pokemonDetails.types
+  //   .map((typeInfo) => typeInfo.type.name)
+  //   .join(", ")}`;
