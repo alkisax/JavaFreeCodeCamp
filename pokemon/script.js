@@ -31,33 +31,45 @@ const fetchPokemons = async () => {
   }
 };
 
-const displayPokemons = (pokemons) => {
-  let pokemonContent = '';
-  pokemons.forEach(({ id, name, url }) => {
-    pokemonContent += `
-      <div>
-        <h3>Name: ${name}</h3>
-        <h3>ID: ${id}</h3>
-      </div>
-    `;
-  });
-  infoContainer.innerHTML += pokemonContent;
+const fetchPokemon = async (nameOrID) => {
+  try {
+    const res = await fetch(`${url}/${nameOrID}`);
+    return await res.json();
+  } catch (err) {
+    alert("Pokémon not found");
+    console.error(`There was an error `, err);
+  }
+}
+
+const displayPokemon = async (nameOrID) => {
+  try {
+    const pokemonDetails = await fetchPokemon(nameOrID);
+
+    namePokemon.innerText = `Name: ${pokemonDetails.name}`;
+    idPokemon.innerText = `ID: ${pokemonDetails.id}`;
+    weight.innerText =`Weight: ${pokemonDetails.weight}`;
+    height.innerText = `Height: ${pokemonDetails.height}`;
+
+
+    // types.innerText = `Types: ${pokemonDetails.types
+    //   .map((typeInfo) => typeInfo.type.name)
+    //   .join(", ")}`;
+    hp.innerText = `HP: ${pokemonDetails.stats[0].base_stat}`;
+    attack.innerText = `Attack: ${pokemonDetails.stats[1].base_stat}`;
+    defence.innerText = `Defense: ${pokemonDetails.stats[2].base_stat}`;
+    specialAttack.innerText = `Special Attack: ${pokemonDetails.stats[3].base_stat}`;
+    specialDefense.innerText = `Special Defense: ${pokemonDetails.stats[4].base_stat}`;
+    speed.innerText = `Speed: ${pokemonDetails.stats[5].base_stat}`;
+  } catch (err) {
+    console.error("Error displaying Pokémon:", err);
+    alert("Error displaying Pokémon");
+  }
 };
 
-const displayPokemon = (pokemon) => {
-  infoContainer.innerHTML = '';
-  const pokemonContent = `
-    <div>
-      <h3>Name: ${pokemon.name}</h3>
-      <h3>ID: ${pokemon.id}</h3>
-    </div>
-  `;
-  infoContainer.innerHTML = pokemonContent;
-};
+const resetDisplay = () => {};
 
 searchButton.addEventListener("click", () => {
-  const searchTerm = searchInput.value.toLowerCase(); 
-
+  const searchTerm = searchInput.value.toLowerCase().trim(); 
   
   fetchPokemons().then(() => {
     const foundPokemon = pokemonDataArr.find(
@@ -66,7 +78,7 @@ searchButton.addEventListener("click", () => {
     if (!foundPokemon) {
       alert("Pokémon not found"); 
     } else {
-      displayPokemon(foundPokemon);
+      displayPokemon(searchTerm);
     }
   });
 });
@@ -86,3 +98,25 @@ searchButton.addEventListener("click", () => {
 //     console.error(`There was an error `, err);
 //   })
 // };
+
+// const displayPokemons = (pokemons) => {
+//   let pokemonContent = '';
+//   pokemons.forEach(({ id, name, url }) => {
+//     pokemonContent += `
+//       <div>
+//         <h3>Name: ${name}</h3>
+//         <h3>ID: ${id}</h3>
+//       </div>
+//     `;
+//   });
+//   infoContainer.innerHTML += pokemonContent;
+// };
+
+
+  // const pokemonContent = `
+  //   <div>
+  //     <h3>Name: ${pokemon.name}</h3>
+  //     <h3>ID: ${pokemon.id}</h3>
+  //   </div>
+  // `;
+  // infoContainer.innerHTML = pokemonContent;
