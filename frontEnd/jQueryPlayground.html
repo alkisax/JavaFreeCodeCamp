@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Meta tags for character encoding and responsive design -->
+    <meta charset="UTF-8"> <!-- Specifies the character set for the document -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Ensures the page is responsive on all devices -->
+  
+    <!-- Page title -->
+    <title>jQuery Playground</title>
+  
+    <!-- Google Fonts: Lobster font -->
+    <link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet" type="text/css"> <!-- Adds the Lobster font -->
+  
+    <!-- Font Awesome: Icon library -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" 
+          integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" 
+          crossorigin="anonymous"> <!-- Adds access to Font Awesome icons -->
+  
+    <!-- Bootstrap CSS: Provides styles for responsive layout and components -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" 
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" 
+          crossorigin="anonymous"> <!-- Adds Bootstrap 3 styles -->
+  
+    <!-- jQuery Library: JavaScript library for simplifying DOM manipulation -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" 
+            integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLR9tP4Ra3n3fvhI8LlS1R9G8SLB1ppZ6U0tYEk5cK" 
+            crossorigin="anonymous"></script> <!-- Includes jQuery library for animations and DOM operations -->
+  
+    <!-- Animate.css: CSS animations library -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" 
+          integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOMD3PJOQwfcKJ1yw0WzvWRaEelvYojw4x1uX6j8" 
+          crossorigin="anonymous"> <!-- Adds predefined CSS animations -->
+  
+  </head>
+  
+<body>
+
+  <script>
+    $(document).ready(function(){
+      $("#target1").css("color", "red");
+      $("#target1").prop("disabled", true);
+      $("#target4").text("<em>#target4</em>");
+      $("#target4").remove();
+      $("#target4").appendTo("#right-well");  // Corrected selector
+      $("#target5").clone().appendTo("#left-well");
+      $("#target1").parent().css("background-color", "red");  // Corrected property name
+      $("#right-well").children().css("color", "orange");
+      $(".target:nth-child(2)").addClass("animated bounce");
+      $(".target:even").addClass("animated shake");
+
+      $("body").addClass("animated hinge");
+    });
+  </script>
+
+  <!-- Code below this line should not be changed -->
+  <div class="container-fluid">
+
+    <h3 class="text-primary text-center">jQuery Playground</h3>
+
+    <div class="row">
+      <div class="col-xs-6">
+        <h4>#left-well</h4>
+        <div class="well" id="left-well">
+          <button id="target1" class="btn btn-default target">#target1</button>
+          <button id="target2" class="btn btn-default target">#target2</button>
+          <button id="target3" class="btn btn-default target">#target3</button>
+
+        </div>
+      </div>
+
+      <div class="col-xs-6">
+        <h4>#right-well</h4>
+        <div class="well" id="right-well">
+          <button id="target4" class="btn btn-default target">#target4</button>
+          <button id="target5" class="btn btn-default target">#target5</button>
+          <button id="target6" class="btn btn-default target">#target6</button>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  
+</body>
+</html>
