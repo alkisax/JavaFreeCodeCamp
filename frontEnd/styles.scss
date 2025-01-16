@@ -60,3 +60,24 @@ $text-color: red;
     font-size: 15px * $j;
   }
 }
+
+//
+@each $color in blue, black, red {
+  .#{$color}-bg {background-color: $color;}
+}
+
+//
+$x: 1;
+@while $x < 6 {
+  .text-#{$x} { font-size: 15 * $x; }
+  $x: $x + 1;
+}
+
+//
+@import 'variables'
+
+//
+// .info-important{
+//   @extend .info;
+//   background-color: magenta;
+// }
