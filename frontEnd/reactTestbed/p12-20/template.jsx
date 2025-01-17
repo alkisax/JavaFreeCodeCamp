@@ -225,13 +225,12 @@ ReactDOM.render(<ShoppingCart />, document.getElementById("challenge-node"));
 class App extends React.Component {
   constructor(props) {
     super(props);
-
   }
   render() {
     return (
         <div>
             { /* Change code below this line */ }
-            <Welcome />
+            <Welcome name="Cthulhu"/>
             { /* Change code above this line */ }
         </div>
     );
@@ -241,15 +240,56 @@ class App extends React.Component {
 class Welcome extends React.Component {
   constructor(props) {
     super(props);
-
   }
   render() {
     return (
         <div>
           { /* Change code below this line */ }
-          <p>Hello, <strong></strong>!</p>
+          <p>Hello, <strong>{this.props.name}</strong>!</p>
           { /* Change code above this line */ }
         </div>
     );
   }
 };
+
+/**
+ * 20
+ */
+
+import PropTypes from 'prop-types';
+class CampSite extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+  render() {
+    return (
+      <div>
+        <Camper/>
+      </div>
+    );
+  }
+};
+// Change code below this line
+class Camper extends React.Component{
+  constructor(props){
+    super(props);
+  }
+  render() {
+    return(
+      <p>
+        {this.props.name}
+      </p>
+    );
+  }
+}
+
+Camper.defaultProps = {
+  name:'CamperBot'
+}
+
+Camper.propTypes = {
+  name: PropTypes.string.isRequired
+};
+
+ReactDOM.render(<CampSite />, document.getElementById("challenge-node"));
+
