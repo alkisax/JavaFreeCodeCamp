@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple App</title>
+</head>
+
+<body>
+
+  <h1>Welcome to My Simple App</h1>
+
+  <button id="toggle-btn">Toggle Div</button>
+
+  <div id="toggle-div" style="display: none;">Hello, this is a toggled div!</div>
+
+  <script>
+    // Purpose: This app demonstrates basic JavaScript features, including event listeners, classes, loops, conditionals, and DOM manipulation.
+
+    class Person {
+      // Constructor: Initializes the name and age of a Person object.
+      constructor(name, age) {
+        this.name = name;
+        this.age = age;
+      }
+
+      // Method: Returns a string about the person.
+      introduce() {
+        return `Hi, my name is ${this.name} and I am ${this.age} years old.`;
+      }
+    }
+
+    // Create two instances of the Person class.
+    const person1 = new Person("Alice", 25);
+    const person2 = new Person("Bob", 30);
+
+    // Add event listener to the button to toggle the div.
+    document.getElementById("toggle-btn").addEventListener("click", () => {
+      const div = document.getElementById("toggle-div"); // Use getElementById to select the div.
+      const header = document.querySelector("h1"); // Use querySelector to select the header.
+
+      // If the div is hidden, show it; otherwise, hide it.
+      div.style.display = div.style.display === "none" ? "block" : "none";
+
+      // Update the header text using a ternary operator and ${}.
+      header.innerText = div.style.display === "block" 
+        ? "Div is now visible!" 
+        : "Welcome to My Simple App";
+
+      // Example of looping through an array and logging messages.
+      [person1, person2].forEach((person) => {
+        console.log(person.introduce()); // Call the introduce method for each person.
+      });
+
+      // Check if the user's name is valid using regex.
+      const name = "Alice123"; // Example input.
+      const isValidName = /^[A-Za-z]+$/.test(name); // Regex to check for letters only.
+      console.log(isValidName ? "Valid name!" : "Invalid name!"); // Log result using ternary operator.
+
+      // Example of an object with key-value pairs.
+      const obj = { key1: "value1", key2: "value2", key3: "value3" };
+
+      // Use a for-in loop to iterate over the object's keys.
+      for (let key in obj) {
+        console.log(`${key}: ${obj[key]}`); // Log each key-value pair using template literals.
+      }
+
+      // Modify the div's innerHTML to show a summary message.
+      div.innerHTML = `
+        <p>${person1.name} and ${person2.name} have been introduced.</p>
+        <p>${isValidName ? "You have a valid name." : "Your name is invalid."}</p>
+      `;
+    });
+
+  </script>
+</body>
+</html>
