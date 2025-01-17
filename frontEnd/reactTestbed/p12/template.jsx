@@ -157,3 +157,99 @@ class ToDo extends React.Component {
     );
   }
 };
+ReactDOM.render(<ToDo />, document.getElementById("challenge-node"))
+
+//16
+const ShoppingCart1 = (props) => {
+  return (
+    <div>
+      <h1>Shopping Cart Component</h1>
+    </div>
+  )
+};
+// Change code below this line
+ShoppingCart1.defaultProps = {
+  items: 0 
+};
+
+//17
+const Items = (props) => {
+  return <h1>Current Quantity of Items in Cart: {props.quantity}</h1>
+}
+
+Items.defaultProps = {
+  quantity: 0
+}
+class ShoppingCart extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+  render() {
+    { /* Change code below this line */ }
+    return <Items quantity={10} />
+    { /* Change code above this line */ }
+  }
+};
+ReactDOM.render(<ShoppingCart />, document.getElementById("challenge-node"));
+
+/**
+ * 18
+ */
+
+// const Items = (props) => {
+//   return <h1>Current Quantity of Items in Cart: {props.quantity}</h1>
+// };
+
+// // Change code below this line
+// Items.propTypes = {
+//   quantity: PropTypes.number.isRequired
+// }
+// // Change code above this line
+
+// Items.defaultProps = {
+//   quantity: 0
+// };
+
+// class ShoppingCart extends React.Component {
+//   constructor(props) {
+//     super(props);
+//   }
+//   render() {
+//     return <Items />
+//   }
+// };
+
+/**
+ * 19
+ */
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+
+  }
+  render() {
+    return (
+        <div>
+            { /* Change code below this line */ }
+            <Welcome />
+            { /* Change code above this line */ }
+        </div>
+    );
+  }
+};
+
+class Welcome extends React.Component {
+  constructor(props) {
+    super(props);
+
+  }
+  render() {
+    return (
+        <div>
+          { /* Change code below this line */ }
+          <p>Hello, <strong></strong>!</p>
+          { /* Change code above this line */ }
+        </div>
+    );
+  }
+};
