@@ -57,7 +57,7 @@ class MyComponent2 extends React.Component {
   }
 };
 //24
-class MyComponent extends React.Component {
+class MyComponent3 extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -67,7 +67,9 @@ class MyComponent extends React.Component {
   }
   handleClick() {
     // Change code below this line
-
+      this.setState({
+        name: "React Rocks!" 
+      })
     // Change code above this line
   }
   render() {
@@ -79,6 +81,113 @@ class MyComponent extends React.Component {
     );
   }
 };
+//25
+class MyComponent4 extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      text: "Hello"
+    };
+    // Change code below this line
+    this.handleClick = this.handleClick.bind(this)
+    // Change code above this line
+  }
+  handleClick() {
+    this.setState({
+      text: "You clicked!"
+    });
+  }
+  render() {
+    return (
+      <div>
+        { /* Change code below this line */ }
+        <button onClick={this.handleClick}>Click Me</button>
+        { /* Change code above this line */ }
+        <h1>{this.state.text}</h1>
+      </div>
+    );
+  }
+};
+//26
+class MyComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      visibility: false
+    };
+    // Change code below this line
+    this.toggleVisibility  = this.toggleVisibility .bind(this)
+    // Change code above this line
+  }
+  // Change code below this line
+  toggleVisibility() {
+    this.setState(state =>({
+      visibility : !state.visibility
+    }))
+  }
+  // Change code above this line
+  render() {
+    if (this.state.visibility) {
+      return (
+        <div>
+          <button onClick={this.toggleVisibility}>Click Me</button>
+          <h1>Now you see me!</h1>
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <button onClick={this.toggleVisibility}>Click Me</button>
+        </div>
+      );
+    }
+  }
+}
+//27
+class Counter extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      count: 0
+    };
+    // Change code below this line
+    this.increment = this.increment.bind(this)
+    this.decrement = this.decrement.bind(this)
+    this.reset = this.reset.bind(this)
+    // Change code above this line
+  }
+  // Change code below this line
+  increment() {
+    this.setState(state => ({
+      count: this.state.count + 1,
+    }))
+  }
+
+  decrement() {
+    this.setState(state => ({
+      count: this.state.count - 1,
+    }))
+  }
+
+  reset() {
+    this.setState(state => ({
+      count: 0,
+    }))
+  }
+
+  // Change code above this line
+  render() {
+    return (
+      <div>
+        <button className='inc' onClick={this.increment}>Increment!</button>
+        <button className='dec' onClick={this.decrement}>Decrement!</button>
+        <button className='reset' onClick={this.reset}>Reset</button>
+        <h1>Current Count: {this.state.count}</h1>
+      </div>
+    );
+  }
+};
+
 //
 const container = document.getElementById("container")
-ReactDOM.render(<MyComponent />, container)
+ReactDOM.render(<Counter />, container)
