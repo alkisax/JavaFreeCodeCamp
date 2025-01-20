@@ -210,3 +210,214 @@ class CheckUserAge extends React.Component {
   }
 }
 //42
+class Results extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+  render() {
+    {/* Change code below this line */}
+    return (
+      <div>
+        {this.props.fiftyFifty ? <h1>You Win!</h1> : <h1>You Lose!</h1> }
+      </div>
+    )
+    {/* Change code above this line */}
+  }
+}
+
+class GameOfChance extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      counter: 1
+    };
+    this.handleClick = this.handleClick.bind(this);
+  }
+  handleClick() {
+    this.setState(prevState => {
+      // Complete the return statement:
+      return {
+        counter: prevState.counter + 1
+      }
+    });
+  }
+  render() {
+    const expression = Math.random() >= .5; // Change this line
+    return (
+      <div>
+        <button onClick={this.handleClick}>Play Again</button>
+        {/* Change code below this line */}
+        <Results fiftyFifty={expression} />
+        {/* Change code above this line */}
+        <p>{'Turn: ' + this.state.counter}</p>
+      </div>
+    );
+  }
+}
+//43
+class GateKeeper extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      input: ''
+    };
+    this.handleChange = this.handleChange.bind(this);
+  }
+  handleChange(event) {
+    this.setState({ input: event.target.value })
+  }
+  render() {
+    let inputStyle = {
+      border: '1px solid black'
+    };
+    // Change code below this line
+    if (this.state.input.length > 15) {
+      inputStyle = {
+        border: "3px solid red"
+      }
+    }
+    // Change code above this line
+    return (
+      <div>
+        <h3>Don't Type Too Much:</h3>
+        <input
+          type="text"
+          style={inputStyle}
+          value={this.state.input}
+          onChange={this.handleChange} />
+      </div>
+    );
+  }
+};
+//44
+const textAreaStyles = {
+  width: 235,
+  margin: 5
+};
+
+class MyToDoList extends React.Component {
+  constructor(props) {
+    super(props);
+    // Change code below this line
+    this.state = {
+      userInput: "",
+      toDoList: []
+    }
+    // Change code above this line
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+  }
+  handleSubmit() {
+    const itemsArray = this.state.userInput.split(',');
+    this.setState({
+      toDoList: itemsArray
+    });
+  }
+  handleChange(e) {
+    this.setState({
+      userInput: e.target.value
+    });
+  }
+  render() {
+    const items = this.state.toDoList.map(item => {
+      return <li>{item}</li>
+    }); // Change this line
+    return (
+      <div>
+        <textarea
+          onChange={this.handleChange}
+          value={this.state.userInput}
+          style={textAreaStyles}
+          placeholder='Separate Items With Commas'
+        />
+        <br />
+        <button onClick={this.handleSubmit}>Create List</button>
+        <h1>My "To Do" List:</h1>
+        <ul>{items}</ul>
+      </div>
+    );
+  }
+}
+//45
+const frontEndFrameworks = [
+  'React',
+  'Angular',
+  'Ember',
+  'Knockout',
+  'Backbone',
+  'Vue'
+];
+
+function Frameworks() {
+  frontEndFrameworks.map(function(item) {
+    return <li key={item}>{item}</li>
+  }) // Change this line
+  return (
+    <div>
+      <h1>Popular Front End JavaScript Frameworks</h1>
+      <ul>
+        {renderFrameworks}
+      </ul>
+    </div>
+  );
+};
+//46
+class MyComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      users: [
+        {
+          username: 'Jeff',
+          online: true
+        },
+        {
+          username: 'Alan',
+          online: false
+        },
+        {
+          username: 'Mary',
+          online: true
+        },
+        {
+          username: 'Jim',
+          online: false
+        },
+        {
+          username: 'Sara',
+          online: true
+        },
+        {
+          username: 'Laura',
+          online: true
+        }
+      ]
+    };
+  }
+  render() {
+    const usersOnline = this.state.users.filter(user => {
+      return user.online
+    }); // Change this line
+    const renderOnline = usersOnline.map(item => {
+      return <li key={item.username}>{item.username}</li>
+    });  // Change this line
+    return (
+      <div>
+        <h1>Current Online Users:</h1>
+        <ul>{renderOnline}</ul>
+      </div>
+    );
+  }
+}
+//47
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+  render() {
+    return <div/>
+  }
+};
+
+// Change code below this line
+ReactDOMServer.renderToString(<App />)
