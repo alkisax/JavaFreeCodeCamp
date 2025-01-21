@@ -178,14 +178,14 @@ store.dispatch({type: ADD});
 console.log(count);
 
 //10
-const INCREMENT = 'INCREMENT';
-const DECREMENT = 'DECREMENT';
+const INCREMENT2 = 'INCREMENT';
+const DECREMENT2 = 'DECREMENT';
 
-const counterReducer = (state = 0, action) => {
+const counterReducer2 = (state = 0, action) => {
   switch(action.type) {
-    case INCREMENT:
+    case INCREMENT2:
       return state + 1;
-    case DECREMENT:
+    case DECREMENT2:
       return state - 1;
     default:
       return state;
@@ -275,12 +275,12 @@ const handleAsync = () => {
   }
 };
 
-const defaultState = {
+const defaultState5 = {
   fetching: false,
   users: []
 };
 
-const asyncDataReducer = (state = defaultState, action) => {
+const asyncDataReducer = (state = defaultState5, action) => {
   switch(action.type) {
     case REQUESTING_DATA:
       return {
@@ -297,9 +297,129 @@ const asyncDataReducer = (state = defaultState, action) => {
   }
 };
 
-const store = Redux.createStore(
+const store10 = Redux.createStore(
   asyncDataReducer,
   Redux.applyMiddleware(ReduxThunk.default)
 );
 
-//13
+//13!!!!!!!!!!!!!!
+const INCREMENT = 'INCREMENT'; // Define a constant for increment action types
+const DECREMENT = 'DEREMENT'; // Define a constant for decrement action types
+
+const counterReducer = (state = 0, action) => {
+  switch(action.type) {
+    case INCREMENT:
+      return state + 1
+    case DECREMENT:
+      return state - 1
+    default: 
+      return state
+  }
+}
+// Define the counter reducer which will increment or decrement the state based on the action it receives
+
+const incAction = () => ({
+  type: INCREMENT
+}); // Define an action creator for incrementing
+
+const decAction = () => ({
+  type: DECREMENT
+}); // Define an action creator for decrementing
+
+const store11 = Redux.createStore(counterReducer); // Define the Redux store here, passing in your reducers
+
+//14
+const ADD_TO_DO = 'ADD_TO_DO';
+
+// A list of strings representing tasks to do:
+const todos = [
+  'Go to the store',
+  'Clean the house',
+  'Cook dinner',
+  'Learn to code',
+];
+
+const immutableReducer2 = (state = todos, action) => {
+  switch(action.type) {
+    case ADD_TO_DO:
+      // Don't mutate state here or the tests will fail
+      return state.concat(action.todo);
+    default:
+      return state;
+  }
+};
+
+const addToDo2 = (todo) => {
+  return {
+    type: ADD_TO_DO,
+    todo
+  }
+}
+
+const store12 = Redux.createStore(immutableReducer);
+
+//15
+const immutableReducer3 = (state = ['Do not mutate state!'], action) => {
+  switch(action.type) {
+    case 'ADD_TO_DO':
+      // Don't mutate state here or the tests will fail
+      return [...state, action.todo];
+    default:
+      return state;
+  }
+};
+
+const addToDo = (todo) => {
+  return {
+    type: 'ADD_TO_DO',
+    todo
+  }
+}
+
+const store13 = Redux.createStore(immutableReducer);
+
+//16
+const immutableReducer4 = (state = [0,1,2,3,4,5], action) => {
+  switch(action.type) {
+    case 'REMOVE_ITEM':
+      // Don't mutate state here or the tests will fail
+      return [...state] - [action.todo];
+    default:
+      return state;
+  }
+};
+
+const removeItem = (index) => {
+  return {
+    type: 'REMOVE_ITEM',
+    index
+  }
+}
+
+const store14 = Redux.createStore(immutableReducer);
+
+//17
+const defaultState = {
+  user: 'CamperBot',
+  status: 'offline',
+  friends: '732,982',
+  community: 'freeCodeCamp'
+};
+
+const immutableReducer = (state = defaultState, action) => {
+  switch(action.type) {
+    case 'ONLINE':
+      // Don't mutate state here or the tests will fail
+      return 
+    default:
+      return state;
+  }
+};
+
+const wakeUp = () => {
+  return {
+    type: 'ONLINE'
+  }
+};
+
+const store = Redux.createStore(immutableReducer);
