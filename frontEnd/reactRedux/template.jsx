@@ -1,3 +1,24 @@
+const ADD = 'ADD'
+
+const addMessage = (message) => ({
+  type: ADD,
+  message: message
+})
+
+const messageReducer = (state = [], action) => {
+  switch(action.type) {
+    case ADD:
+      return [...state, action.message]
+    default:
+      return state
+  }
+};
+
+const store = Redux.createStore(messageReducer)
+
+/**
+ * 
+ */
 class DisplayMessages extends React.Component {
   constructor(props) {
     super(props);
@@ -44,20 +65,3 @@ class DisplayMessages extends React.Component {
 /**
  * 
  */
-const ADD = 'ADD'
-
-const addMessage = (message) => ({
-  type: ADD,
-  message: message
-})
-
-const messageReducer = (state = [], action) => {
-  switch(action.type) {
-    case ADD:
-      return [...state, action.message]
-    default:
-      return state
-  }
-};
-
-const store = Redux.createStore(messageReducer)
