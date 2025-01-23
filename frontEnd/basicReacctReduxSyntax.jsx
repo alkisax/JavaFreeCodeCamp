@@ -34,14 +34,18 @@ const connect = ReactRedux.connect;
 //Εδω φτιάχνετε η βασική React κλασή. Στο τέλος θα προβληθεί με ReactDOM.render(<class />, document.getElementById("container"))
 // Έχει extends, props, state, μεθόδους αλλαγής (Events handler) και στο τέλος render(){} που κάνει return html
 class Presentational extends React.Component {
+  //Μεσα στον constructor props και state
   constructor(props) {
     super(props);
+    // το state είναι ένα obj {}
     this.state = {
       input: '',
     }
+    //πρεπει να γίνει bind το this σε όλες τις μεθόδους
     this.handleChange = this.handleChange.bind(this);
     this.submitMessage = this.submitMessage.bind(this);
   }
+  //μέθοδοι, με setState μου αλλάζουν το state (Gpt: δεν θα έπρεπε αυτό να γίνετε μόνο στην Redux;)
   handleChange(event) {
     this.setState({
       input: event.target.value
@@ -73,12 +77,15 @@ class Presentational extends React.Component {
     );
   }
 };
-// Change code above this line
+
+//αυτα χρησιμοποιούντε στην έννωση react-redux (gpt: did not understand this part)
+//mapStateToProps(state): Λέει στο React component ποια κομμάτια του Redux state θέλει να χρησιμοποιήσει. Στην περίπτωσή σου, όλο το state (ο πίνακας μηνυμάτων) μεταφέρεται ως prop (messages).
 
 const mapStateToProps = (state) => {
   return {messages: state}
 };
 
+//mapDispatchToProps(dispatch): Συνδέει τις action creators με το React component. Δημιουργεί props, που όταν καλούνται, dispatch τα αντίστοιχα actions.
 const mapDispatchToProps = (dispatch) => {
   return {
     submitNewMessage: (message) => {
@@ -99,106 +106,12 @@ class AppWrapper extends React.Component {
   }
 };
 
-// // Redux:
-// const ADD = 'ADD';
-
-// const addMessage = (message) => {
-//   return {
-//     type: ADD,
-//     message: message
-//   }
-// };
-
-// const messageReducer = (state = [], action) => {
-//   switch (action.type) {
-//     case ADD:
-//       return [
-//         ...state,
-//         action.message
-//       ];
-//     default:
-//       return state;
-//   }
-// };
-
-// const store = Redux.createStore(messageReducer);
-
-// // React:
-// class Presentational extends React.Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = {
-//       input: '',
-//       messages: []
-//     }
-//     this.handleChange = this.handleChange.bind(this);
-//     this.submitMessage = this.submitMessage.bind(this);
-//   }
-//   handleChange(event) {
-//     this.setState({
-//       input: event.target.value
-//     });
-//   }
-//   submitMessage() {
-//     this.setState((state) => {
-//       const currentMessage = state.input;
-//       return {
-//         input: '',
-//         messages: state.messages.concat(currentMessage)
-//       };
-//     });
-//   }
-//   render() {
-//     return (
-//       <div>
-//         <h2>Type in a new Message:</h2>
-//         <input
-//           value={this.state.input}
-//           onChange={this.handleChange}/><br/>
-//         <button onClick={this.submitMessage}>Submit</button>
-//         <ul>
-//           {this.state.messages.map( (message, idx) => {
-//               return (
-//                  <li key={idx}>{message}</li>
-//               )
-//             })
-//           }
-//         </ul>
-//       </div>
-//     );
-//   }
-// };
-
-// // React-Redux:
-// const mapStateToProps = (state) => {
-//   return { messages: state }
-// };
-
-// const mapDispatchToProps = (dispatch) => {
-//   return {
-//     submitNewMessage: (newMessage) => {
-//        dispatch(addMessage(newMessage))
-//     }
-//   }
-// };
-
-// const Provider = ReactRedux.Provider;
-// const connect = ReactRedux.connect;
-
-// // Define the Container component here:
-// const Container = connect(mapStateToProps, mapDispatchToProps)(Presentational)
-
-// class AppWrapper extends React.Component {
-//   constructor(props) {
-//     super(props);
-//   }
-//   render() {
-//     // Complete the return statement:
-//     return (
-//       <Provider store={store}>
-//         <Container />
-//       </Provider>
-//     );
-//   }
-// };
-
+/*
+1 Ο χρήστης πληκτρολογεί ένα μήνυμα στο input → αλλάζει το τοπικό state μέσω του handleChange.
+2 Πατάει το κουμπί "Submit" → καλείται το submitMessage, που:
+  Παίρνει το μήνυμα από το τοπικό state.
+  Καλεί το submitNewMessage από τα props.
+  Το submitNewMessage dispatch το action addMessage στο Redux store.
+3 Ο reducer (messageReducer) προσθέτει το νέο μήνυμα στο state.
+4 Το React ανανεώνεται με τα νέα props από το Redux store και εμφανίζει το μήνυμα στη λίστα.
+*/
