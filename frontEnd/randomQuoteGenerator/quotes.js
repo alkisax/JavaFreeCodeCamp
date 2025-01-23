@@ -32,6 +32,6 @@ const quotes = [
   "In class society, everyone lives as a member of a particular class, and every kind of thinking, without exception, is stamped with the brand of a class.",
   "All men must die, but death can vary in its significance. The ancient Chinese writer Sima Qian said, 'Though death befalls all men alike, it may be weightier than Mount Tai or lighter than a feather.' To die for the people is weightier than Mount Tai, but to work for the fascists and die for the exploiters and oppressors is lighter than a feather.",
   "The people, and the people alone, are the motive force in the making of world history.",
-];
+  ];
 
 export default quotes;
