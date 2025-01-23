@@ -121,19 +121,154 @@ const quotes = [
 
   ];
 
+const randomIndexer = () => {
+  return Math.floor(Math.random() * quotes.length);
+}
+
 let randomIndex = Math.floor(Math.random() * quotes.length);
 
-const JSX1 = (
-  <div>
+const renderQuote = () => {
+  const randomIndex = randomIndexer()
+  const quoteHtml = (
     <p>{quotes[randomIndex].quote}</p>
-  </div>
+  )
+  const authorHtml = (
+    <p><strong>{quotes[randomIndex].author}</strong></p>
+  ) 
+
+  const txt = document.getElementById("text")
+  const auth = document.getElementById("author")
+  ReactDOM.render(quoteHtml, txt);
+  ReactDOM.render(authorHtml, auth);  
+
+  const tweetQuote = document.getElementById("tweet-quote");
+  tweetQuote.setAttribute('href', `https://twitter.com/intent/tweet?text="${quotes[randomIndex].quote}" - ${quotes[randomIndex].author}`);
+
+}
+renderQuote()
+const btn = document.getElementById("new-quote")
+btn.addEventListener("click", renderQuote)
+
+
+// const JSX1 = (
+//   <div>
+//     <p>{quotes[randomIndex].quote}</p>
+//   </div>
+// );
+
+// const JSX2 = (
+//   <p><strong>{quotes[randomIndex].author}</strong></p>
+// )
+
+// const txt = document.getElementById("text")
+// const auth = document.getElementById("author")
+// ReactDOM.render(JSX1, txt)
+// ReactDOM.render(JSX2, auth)
+
+
+//REDUX
+
+// const randomIndexer = () => {
+//   return Math.floor(Math.random() * quotes.length);
+// }
+
+/*
+const randomQuote = quotes[randomIndexer()]; // Get a single random quote
+
+const initialState = {
+  quote: randomQuote.quote,
+  author: randomQuote.author,
+};
+
+const CHANGE = 'CHANGE'
+
+const changeQuote = (quote) => {
+  return {
+    type: CHANGE,
+    quote: quote.quote,
+    author: quote.author
+  }
+}
+
+const quoteReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case CHANGE:
+      return {
+        quote: action.quote,
+        author: action.author,
+      }
+    default:
+      return state;
+  }
+}
+
+const store = Redux.createStore(quoteReducer);
+
+//REACT
+//αυτά χρησιμοποιούντε στην έννωση React/Rerdux (gpt add more)
+const Provider = ReactRedux.Provider;
+const connect = ReactRedux.connect;
+
+class Presentational extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+  handleChange = () => {
+    const newQuote = quotes[randomIndexer()];
+    this.props.changeQuote(newQuote); // Dispatch the action to update Redux state
+  }
+
+  render() {
+    return (
+      <div className="p-4" id="quote-box">
+      <div id="text">
+        <p>"{this.props.quote}"</p>
+      </div>
+      <div className="d-flex justify-content-end align-items-center" id="author">
+        <strong>- {this.props.author}</strong>
+      </div>
+      <button
+        className="btn btn-primary me-2"
+        id="new-quote"
+        onClick={this.handleChange}
+      >
+        <i className="fas fa-sync-alt"></i> New
+      </button>
+      <button className="btn btn-info text-white" id="tweet-quote">
+        <i className="fab fa-twitter"></i>{' '}
+        <a
+          href={`https://twitter.com/intent/tweet?text="${this.props.quote}" - ${this.props.author}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-white"
+        >
+          Tweet
+        </a>
+      </button>
+    </div>
+    )
+  }
+}
+
+
+// Map state and dispatch to props
+const mapStateToProps = (state) => ({
+  quote: state.quote,
+  author: state.author,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  changeQuote: (quote) => dispatch(changeQuote(quote)),
+});
+
+// Connect React component to Redux
+const Container = connect(mapStateToProps, mapDispatchToProps)(Presentational);
+
+// Render App
+ReactDOM.render(
+  <Provider store={store}>
+    <Container />
+  </Provider>,
+  document.getElementById('root')
 );
-
-const JSX2 = (
-  <p><strong>{quotes[randomIndex].author}</strong></p>
-)
-
-const txt = document.getElementById("text")
-const auth = document.getElementById("author")
-ReactDOM.render(JSX1, txt)
-ReactDOM.render(JSX2, auth)
+*/
