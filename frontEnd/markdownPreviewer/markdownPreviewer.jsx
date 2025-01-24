@@ -81,9 +81,12 @@ class InputComponent extends React.Component {
   }
   //  η αλλαγή στέλνετε στην μέθοδο του redux
   // παρακάτω θα κάνω το input να στέλνει κατευθείαν την αλλαγή εδώ
+  // την αλλαγή στο markdown την έκανα εδώ γιατί αυτό είναι το κομμάτι του κωδικα που είναι υπεύθυνο για την αλλαγή
   handleChange = (event) => {
     console.log("Input value:", event.target.value); // Log the input value
-    this.props.changeInput({ text: event.target.value })    //2. απο εδώ πάει στο changeInput
+    const markdownText = event.target.value;
+    const htmlContent = marked.parse(markdownText);
+    this.props.changeInput({ text: htmlContent })    //2. απο εδώ πάει στο changeInput
   }
   // 1. απο εδώ πάει στο handleChange 
   render() {
