@@ -101,17 +101,25 @@ class OutputComponent extends React.Component {
   constructor(props) {
     super(props)
   }
-  render() {
-
+  // αυτη η αλλαγή μου επετρεψε να περάσω τα βήματα 3 και 4
+  // render() {
     
+  //   console.log("OutputComponent render, props.text:", this.props.text); // Log props.text
+  //   return (
+  //     <div id="preview" className="bg-white border p-3">
+  //       <p style={{ whiteSpace: 'pre-wrap' }}>
+  //         {this.props.text}
+  //       </p>
+  //     </div>
+  //   )
+  // }
+  render() {
     console.log("OutputComponent render, props.text:", this.props.text); // Log props.text
     return (
-      <div id="preview" className="bg-white border p-3">
-        <p style={{ whiteSpace: 'pre-wrap' }}>
-          {this.props.text}
-        </p>
+      <div id="preview" className="bg-white border p-3" 
+        dangerouslySetInnerHTML={{ __html: this.props.text }}>
       </div>
-    )
+    );
   }
 }
 
