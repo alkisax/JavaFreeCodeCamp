@@ -14,6 +14,21 @@ second class renders the changed text from redux
 
 then some code to conect react and redux and to render to "editor" and "preview"
 */
+/*
+User Input (textarea) --> handleChange (React) --> Dispatch action (Redux)
+--> Action handled by reducer --> Store updated --> Re-render OutputComponent (React)
+--> Display updated text (preview)
+*/
+
+function Editor({ markdown, setMarkdown }) {
+  return (
+    <textarea
+      value={markdown}              
+      onChange={(e) => setMarkdown(e.target.value)}  
+      placeholder="Enter Markdown here..."
+    />
+  );
+}
 
 const initialState = {
   text: ""
@@ -72,7 +87,6 @@ class InputComponent extends React.Component {
   }
   // 1. απο εδώ πάει στο handleChange 
   render() {
-    // 1. απο εδώ πάει στο handleChange
     return (
       <div>
         <textarea id="editor" className="form-control" onChange={this.handleChange} /> 
@@ -85,10 +99,14 @@ class OutputComponent extends React.Component {
     super(props)
   }
   render() {
+
+    
     console.log("OutputComponent render, props.text:", this.props.text); // Log props.text
     return (
-      <div>
-        <p>{this.props.text}</p>
+      <div id="preview" className="bg-white border p-3">
+        <p style={{ whiteSpace: 'pre-wrap' }}>
+          {this.props.text}
+        </p>
       </div>
     )
   }
