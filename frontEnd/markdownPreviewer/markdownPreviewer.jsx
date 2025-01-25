@@ -15,6 +15,16 @@ second class renders the changed text from redux
 then some code to conect react and redux and to render to "editor" and "preview"
 */
 /*
+InputComponent:
+When the user types in the input field, handleChange dispatches the changeInput action to update the Redux store with the new text.
+
+Redux Store:
+The inputReducer processes the dispatched action and updates the text in the store.
+
+OutputComponent:
+The OutputComponent retrieves the updated text from the Redux store (via mapStateToProps) and displays it.
+*/
+/*
 User Input (textarea) --> handleChange (React) --> Dispatch action (Redux)
 --> Action handled by reducer --> Store updated --> Re-render OutputComponent (React)
 --> Display updated text (preview)
@@ -89,17 +99,6 @@ store.subscribe(() => {
 const Provider = ReactRedux.Provider
 const connect = ReactRedux.connect
 
-/*
-InputComponent:
-When the user types in the input field, handleChange dispatches the changeInput action to update the Redux store with the new text.
-
-Redux Store:
-The inputReducer processes the dispatched action and updates the text in the store.
-
-OutputComponent:
-The OutputComponent retrieves the updated text from the Redux store (via mapStateToProps) and displays it.
-*/
-
 class InputComponent extends React.Component {
   constructor(props) {
     super(props)
@@ -126,18 +125,6 @@ class OutputComponent extends React.Component {
   constructor(props) {
     super(props)
   }
-  // αυτη η αλλαγή μου επετρεψε να περάσω τα βήματα 3 και 4
-  // render() {
-    
-  //   console.log("OutputComponent render, props.text:", this.props.text); // Log props.text
-  //   return (
-  //     <div id="preview" className="bg-white border p-3">
-  //       <p style={{ whiteSpace: 'pre-wrap' }}>
-  //         {this.props.text}
-  //       </p>
-  //     </div>
-  //   )
-  // }
   render() {
     console.log("OutputComponent render, props.text:", this.props.text); // Log props.text
     return (
@@ -165,6 +152,36 @@ const mapStateToPropsOutput = (state) => {
 };
 const ConnectedOutputComponent = connect(mapStateToPropsOutput)(OutputComponent);
 
+ReactDOM.render(
+  <Provider store={store}>
+    <div className="container">
+      <ConnectedInputComponent />
+      <ConnectedOutputComponent />
+    </div>
+  </Provider>,
+  document.getElementById("root")
+);
+
+/*
+*/
+// class OutputComponent extends React.Component {
+//   constructor(props) {
+//     super(props)
+//   }
+  // αυτη η αλλαγή μου επετρεψε να περάσω τα βήματα 3 και 4
+  // render() {
+    
+  //   console.log("OutputComponent render, props.text:", this.props.text); // Log props.text
+  //   return (
+  //     <div id="preview" className="bg-white border p-3">
+  //       <p style={{ whiteSpace: 'pre-wrap' }}>
+  //         {this.props.text}
+  //       </p>
+  //     </div>
+  //   )
+  // }
+
+
 // render *2
 // ReactDOM.render(
 //   <Provider store={store}>
@@ -179,12 +196,3 @@ const ConnectedOutputComponent = connect(mapStateToPropsOutput)(OutputComponent)
 //   </Provider>,
 //   document.getElementById("preview")
 // );
-ReactDOM.render(
-  <Provider store={store}>
-    <div className="container">
-      <ConnectedInputComponent />
-      <ConnectedOutputComponent />
-    </div>
-  </Provider>,
-  document.getElementById("root")
-);
