@@ -66,6 +66,7 @@ function greet() {
 
 const initialState = {
   text: defaultMarkdown,
+  html: marked.parse(defaultMarkdown),
 };
 
 
@@ -74,7 +75,8 @@ const INPUT = "INPUT"
 const changeInput = (input) => {  // 3. απο εδώ πάει στο inputReducer
   return {
     type: INPUT,
-    text: input.text
+    text: input.text,
+    html: marked.parse(input.text),
   }
 }
 
@@ -85,13 +87,15 @@ const inputReducer = (state = initialState, action) => {
     case INPUT:
       console.log("Updated state:", { text: action.text }); // Log the new state
       return {
-        text: action.text
+        text: action.text,
+        html: action.html,
       }
     default:
       return state
   }
 }
 const store = Redux.createStore(inputReducer)
+
 store.subscribe(() => {
   console.log("Store state updated:", store.getState());
 });
@@ -110,7 +114,7 @@ class InputComponent extends React.Component {
     console.log("Input value:", event.target.value); // Log the input value
     const markdownText = event.target.value;
     const htmlContent = marked.parse(markdownText);
-    this.props.changeInput({ text: htmlContent })    //2. απο εδώ πάει στο changeInput
+    this.props.changeInput({ text: markdownText })    //2. απο εδώ πάει στο changeInput
   }
   // 1. απο εδώ πάει στο handleChange 
   render() {
@@ -126,10 +130,9 @@ class OutputComponent extends React.Component {
     super(props)
   }
   render() {
-    console.log("OutputComponent render, props.text:", this.props.text); // Log props.text
     return (
       <div id="preview" className="bg-white border p-3" 
-        dangerouslySetInnerHTML={{ __html: this.props.text }}>
+        dangerouslySetInnerHTML={{ __html: this.props.html }}>
       </div>
     );
   }
@@ -139,22 +142,21 @@ const editor = document.getElementById("editor")
 const preview = document.getElementById("preview")
 
 //connetion
-const mapDispatchToPropsInput = (dispatch) => ({
-  changeInput: (input) => dispatch(changeInput(input)),
-});
-
-const ConnectedInputComponent = connect(null, mapDispatchToPropsInput)(InputComponent);
-
 const mapStateToPropsInput = (state) => ({
   text: state.text,
 });
 
-const mapStateToPropsOutput = (state) => {
-  console.log("OutputComponent mapStateToProps, state:", state); // Log the state
-  return{
-    text: state.text,
-  }
-};
+const mapDispatchToPropsInput = (dispatch) => ({
+  changeInput: (input) => dispatch(changeInput(input)),
+});
+
+const ConnectedInputComponent = connect(mapStateToPropsInput, mapDispatchToPropsInput)(InputComponent);
+
+
+
+const mapStateToPropsOutput = (state) => ({
+  html: state.html,
+})
 
 const ConnectedOutputComponent = connect(mapStateToPropsOutput)(OutputComponent);
 
