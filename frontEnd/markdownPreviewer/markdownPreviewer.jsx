@@ -30,9 +30,34 @@ function Editor({ markdown, setMarkdown }) {
   );
 }
 
-const initialState = {
-  text: ""
+const defaultMarkdown = `
+# Welcome to my Markdown Previewer!
+## This is a sub-header...
+[Link to FreeCodeCamp](https://www.freecodecamp.org)
+\`Inline code example\`
+
+\`\`\`
+// This is a code block
+function greet() {
+  console.log("Hello, world!");
 }
+\`\`\`
+
+- List item 1
+- List item 2
+
+> Blockquote
+
+![Markdown Logo](https://upload.wikimedia.org/wikipedia/commons/4/48/Markdown-mark.svg)
+
+**Bold text example**
+`;
+
+
+const initialState = {
+  text: defaultMarkdown,
+};
+
 
 const INPUT = "INPUT"
 
@@ -92,7 +117,7 @@ class InputComponent extends React.Component {
   render() {
     return (
       <div>
-        <textarea id="editor" className="form-control" onChange={this.handleChange} /> 
+        <textarea id="editor" className="form-control" onChange={this.handleChange} value={this.props.text} /> 
       </div>      
     )
   }
