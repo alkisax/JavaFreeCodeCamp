@@ -3,7 +3,7 @@ class Keypad extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      buttons:  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, "=", "+", "-", "*", "/", ".", "AC"]
+      buttons:  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, "=", "+", "-", "*", "/", "AC"]
     }
   }
   handdleChange = (ButtonId) => {
@@ -17,24 +17,14 @@ Here, this.props.onButtonClick is a callback function passed down from the paren
 
   render() {
     return (
-      <div className="container">
-        <div className="row"> 
-          {this.state.buttons.map((button, index) => (
-            <div
-            key={index} 
-            className="col-3 p-2"
-            >
-              <div 
-              className="btn btn-secondary w-100 text-center p-3" 
-              id={button} 
-              onClick={() => {
-                this.handdleChange(button)
-                }}>
-                {button}
-              </div>
-            </div> 
-          ))}
+      <div>
+
+      
+
+        <div className="btn btn-secondary" id="1" onClick={() => {this.handdleChange("1")}}>
+          1
         </div>
+
       </div>
     )
   }
@@ -51,7 +41,6 @@ class Displayer extends React.Component {
     this.setState({
       currentButtonId: buttonId
     })
-    console.log(`endstate button id ${buttonId}`)
   }
   render() {
     return (
