@@ -226,10 +226,10 @@ class Display extends React.Component {
     return (
       <div>
         <div id="display" className="card p-3 mb-3 bg-light">
-          <p id="displayEquotation" className="text-end fs-3 mb-0 font-monospace text-muted">
+          <p className="text-end fs-3 mb-0 font-monospace text-muted">
             {this.state.expression}
           </p>
-          <p id="displayResult" className="text-end display-4 fw-bold mb-0 font-monospace">
+          <p className="text-end display-4 fw-bold mb-0 font-monospace">
             {this.state.result}
           </p>
         </div>
