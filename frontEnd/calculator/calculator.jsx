@@ -215,10 +215,14 @@ class Display extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.expression !== prevProps.expression) {
-      this.setState({ expression: this.props.expression });
+      this.setState({ 
+        expression: this.props.expression 
+      });
     }
     if (this.props.result !== prevProps.result) {
-      this.setState({ result: this.props.result });
+      this.setState({ 
+        result: this.props.result 
+      });
     }
   }
 
@@ -227,9 +231,8 @@ class Display extends React.Component {
       <div>
         <div id="display" className="card p-3 mb-3 bg-light">
           <p className="text-end fs-3 mb-0 font-monospace text-muted">
-            {this.state.expression}
-          </p>
-          <p className="text-end display-4 fw-bold mb-0 font-monospace">
+            {this.state.expression.trim()}
+          <br />
             {this.state.result}
           </p>
         </div>
@@ -247,9 +250,14 @@ class Displayer extends React.Component {
     }
   }
 
+  formater = (value) => {
+    return String(value).replace(/\n/g, '').trim();
+  }
+
   handleButtonClick = (value) => {
     console.log("Button received in Displayer:", value);
     
+    value = this.formater(value)
     switch(value) {
       case "AC":
         this.setState({
@@ -261,7 +269,12 @@ class Displayer extends React.Component {
       case "=":
         try {
           const result = eval(this.state.expression);
-          this.setState({ result });
+          if (!isNaN(result)) {
+            this.setState({ 
+              result: parseFloat(result) 
+          });
+          }
+
         } catch (error) {
           console.log("Invalid expression", error);
         }
