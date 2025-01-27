@@ -208,17 +208,71 @@ class Display extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      expression: "",
-      result: 0
+      function: "test function 2+3",
+      result: 5,
+      lastValue: null
     }
   }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.expression !== prevProps.expression) {
-      this.setState({ expression: this.props.expression });
+  handleButtonDisplayChange = (value) => {
+    if (value === null) return;
+    console.log("Button value in Display:", value);
+    switch (value){
+      case "AC":
+        this.setState({
+          function: "",
+          result: 0,
+          lastValue: null
+        });
+        break
+      case 0:
+      case 1:
+      case 2:
+      case 3:
+      case 4:
+      case 5:
+      case 6:
+      case 7:
+      case 8:
+      case 9:
+      case "+":
+      case "-":
+      case "*":
+      case "/":
+      case ".":
+        this.functionCreator(value);
+        break;
+      case "=":
+        this.calculateResult();
+        break;
+      default:
+        console.log("ERROR")
     }
-    if (this.props.result !== prevProps.result) {
-      this.setState({ result: this.props.result });
+    this.setState({ lastValue: value });
+  }
+
+  functionCreator = (value) => {
+    this.setState((prevState) => ({
+      function: prevState.function + String(value)
+    }))
+    // this.state.function = this.state.function + buttonId
+  }
+
+  calculateResult = () => {
+    try {
+      // Use eval here to evaluate the expression safely
+      const result = eval(this.state.function);
+      this.setState({ result });
+    } catch (error) {
+      console.log("Invalid expression", error);
+    }
+  };
+
+  //added
+  componentDidUpdate(prevProps) {
+    // Check if the 'value' prop has changed
+    if (this.props.value !== prevProps.value) {
+      // Call handleButtonDisplayChange to update the display based on the new value
+      this.handleButtonDisplayChange(this.props.value);
     }
   }
 
@@ -227,9 +281,9 @@ class Display extends React.Component {
       <div>
         <div id="display" className="card p-3 mb-3 bg-light">
           <p id="displayEquotation" className="text-end fs-3 mb-0 font-monospace text-muted">
-            {this.state.expression}
+            {this.state.function}
           </p>
-          <p id="displayResult" className="text-end display-4 fw-bold mb-0 font-monospace">
+          <p id="displayResult" className="text-end display-4 fw-bold mb-0 font-monospace ">
             {this.state.result}
           </p>
         </div>
@@ -242,53 +296,27 @@ class Displayer extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      expression: "",
-      result: 0
+      value: null
     }
   }
-
   handleButtonClick = (value) => {
     console.log("Button received in Displayer:", value);
-    
-    switch(value) {
-      case "AC":
-        this.setState({
-          expression: "",
-          result: 0
-        });
-        break;
-        
-      case "=":
-        try {
-          const result = eval(this.state.expression);
-          this.setState({ result });
-        } catch (error) {
-          console.log("Invalid expression", error);
-        }
-        break;
-        
-      default:
-        this.setState(prevState => ({
-          expression: prevState.expression + String(value)
-        }));
-    }
+    this.setState({
+      value: value
+    })
   }
-
   render() {
     return (
       <div>
         <div className="container">
           <div className="row">
             <div className="col-9">
-              <Display 
-                expression={this.state.expression}
-                result={this.state.result}
-              />
+            <Display value={this.state.value} />
             </div>
           </div>
           <div className="row">
             <div className="col-12">
-              <Keypad onButtonClick={this.handleButtonClick} />
+            <Keypad onButtonClick={this.handleButtonClick} />
             </div>
           </div>
         </div>
