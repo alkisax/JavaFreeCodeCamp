@@ -229,15 +229,21 @@ class Display extends React.Component {
   render() {
     return (
       <div>
-        <div id="display" className="card p-3 mb-3 bg-light">
-          <p className="text-end fs-3 mb-0 font-monospace text-muted">
+        {/* Expression Box */}
+        <div className="card p-3 mb-1 bg-light">
+          <p className="text-end fs-4 mb-0 font-monospace text-muted">
             {this.state.expression.trim()}
-          <br />
+          </p>
+        </div>
+        
+        {/* Result Box */}
+        <div id="display" className="card p-3 mb-3 bg-light">
+          <p className="text-end fs-3 mb-0 font-monospace text-dark">
             {this.state.result}
           </p>
         </div>
       </div>
-    )
+    );
   }
 }
 
