@@ -203,25 +203,23 @@ Here, this.props.onButtonClick is a callback function passed down from the paren
   }
 }
 
-
 class Display extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
-      expression: "",
-      result: 0
-    }
+      showResult: false, // Track whether to show the result or the expression
+    };
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.expression !== prevProps.expression) {
-      this.setState({ 
-        expression: this.props.expression 
+      this.setState({
+        showResult: false, // Show expression when input changes
       });
     }
     if (this.props.result !== prevProps.result) {
-      this.setState({ 
-        result: this.props.result 
+      this.setState({
+        showResult: true, // Show result when "=" is pressed
       });
     }
   }
@@ -229,19 +227,21 @@ class Display extends React.Component {
   render() {
     return (
       <div>
-        {/* Expression Box */}
-        <div className="card p-3 mb-1 bg-light">
-          <p className="text-end fs-4 mb-0 font-monospace text-muted">
-            {this.state.expression.trim()}
-          </p>
-        </div>
-        
-        {/* Result Box */}
-        <div id="display" className="card p-3 mb-3 bg-light">
-          <p className="text-end fs-3 mb-0 font-monospace text-dark">
-            {this.state.result}
-          </p>
-        </div>
+        {this.state.showResult ? (
+          // Result Box (shown only when "=" is pressed)
+          <div id="display" className="card p-3 mb-3 bg-light">
+            <p className="text-end fs-3 mb-0 font-monospace text-dark">
+              {this.props.result}
+            </p>
+          </div>
+        ) : (
+          // Expression Box (shown for input)
+          <div id="display" className="card p-3 mb-1 bg-light">
+            <p className="text-end fs-4 mb-0 font-monospace text-muted">
+              {this.props.expression.trim()}
+            </p>
+          </div>
+        )}
       </div>
     );
   }
@@ -264,6 +264,9 @@ class Displayer extends React.Component {
     console.log("Button received in Displayer:", value);
     
     value = this.formater(value)
+
+    const { expression } = this.state;
+
     switch(value) {
       case "AC":
         this.setState({
@@ -277,7 +280,8 @@ class Displayer extends React.Component {
           const result = eval(this.state.expression);
           if (!isNaN(result)) {
             this.setState({ 
-              result: parseFloat(result) 
+              result: parseFloat(result),
+              expression: String(parseFloat(result)) 
           });
           }
 
@@ -287,6 +291,60 @@ class Displayer extends React.Component {
         break;
         
       default:
+        // Prevent multiple decimal points in a number
+        if (value === ".") {
+          const lastNumber = expression.split(/[\+\-\*\/]/).pop();
+          if (lastNumber.includes(".")) {
+            return;
+          }
+        }
+
+        // Handle consecutive operators, keeping only the last one (excluding the negative sign)
+        if (["+", "-", "*", "/"].includes(value)) {
+          const lastChar = expression.slice(-1);
+
+          // Allow "-" if it's part of a negative number
+          if (value === "-" && ["+", "-", "*", "/"].includes(lastChar)) {
+            if (expression.length > 1 && ["+", "*", "/"].includes(expression.slice(-2, -1))) {
+              // Replace the last operator with the negative sign
+              this.setState(prevState => ({
+                expression: prevState.expression.slice(0, -1) + value
+              }));
+            } else {
+              // Append "-" if it's valid
+              this.setState(prevState => ({
+                expression: prevState.expression + value
+              }));
+            }
+            return;
+          }
+
+          // For other operators, replace the last operator with the new one
+          if (["+", "-", "*", "/"].includes(lastChar)) {
+            this.setState(prevState => ({
+              expression: prevState.expression.slice(0, -1) + value
+            }));
+            return;
+          }
+        }
+
+
+        // Prevent invalid starting characters
+        if (expression === "" && ["+", "*", "/"].includes(value)) {
+          return;
+        }
+
+        // Prevent invalid characters (though the keypad should already restrict this)
+        if (!/[0-9+\-*\/.]/.test(value)) {
+          return;
+        }
+
+        // Prevent a number from starting with multiple zeros
+        const lastNumber = expression.split(/[\+\-\*\/]/).pop();
+        if (lastNumber === "0" && value === "0") {
+          return;
+        }
+
         this.setState(prevState => ({
           expression: prevState.expression + String(value)
         }));
@@ -341,3 +399,49 @@ class BoilerPlate extends React.Component {
     )
   }
 }
+
+
+
+
+// class Display extends React.Component {
+//   constructor(props) {
+//     super(props)
+//     this.state = {
+//       expression: "",
+//       result: 0
+//     }
+//   }
+
+//   componentDidUpdate(prevProps) {
+//     if (this.props.expression !== prevProps.expression) {
+//       this.setState({ 
+//         expression: this.props.expression 
+//       });
+//     }
+//     if (this.props.result !== prevProps.result) {
+//       this.setState({ 
+//         result: this.props.result 
+//       });
+//     }
+//   }
+
+//   render() {
+//     return (
+//       <div>
+//         {/* Expression Box */}
+//         <div className="card p-3 mb-1 bg-light">
+//           <p className="text-end fs-4 mb-0 font-monospace text-muted">
+//             {this.state.expression.trim()}
+//           </p>
+//         </div>
+        
+//         {/* Result Box */}
+//         <div id="display" className="card p-3 mb-3 bg-light">
+//           <p className="text-end fs-3 mb-0 font-monospace text-dark">
+//             {this.state.result}
+//           </p>
+//         </div>
+//       </div>
+//     );
+//   }
+// }
