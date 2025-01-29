@@ -261,33 +261,41 @@ class Displayer extends React.Component {
   }
   
   parseExpression = (expr) => {
-    // Step 1: Split the expression into A, B, and C using regex
+    // Step 1: Adjust expression to treat negative signs as operators if needed
+    expr = expr.replace(/([^\d])-/g, '$1 -'); // Make sure minus signs are treated as operators
+    
+    // Step 2: Split the expression into parts using regex
     const match = expr.match(/^([+-]?\d+)([+\-*/]+)([+-]?\d+)$/);
-  
+
     if (match) {
       const A = match[1]; // First number (can have a leading '-')
       const B = match[2]; // Operators (could be multiple)
       const C = match[3]; // Second number (can have a leading '-')
-  
-      // Step 2: Handle negative sign at the end of the operator sequence
+
+      // Step 3: Handle the special case for subtraction (single operator)
       let operators = B;
-      
-      // Check if the last character of the operator part is a negative sign and adjust
+      if (operators.length === 1 && operators === '-') {
+        // If there's only one operator and it's "-", treat it as an operator, not part of number C
+        return { A, lastOperator: operators, C };
+      }
+
+      // Step 4: Handle negative sign at the end of the operator sequence
       if (operators[operators.length - 1] === '-') {
         operators = operators.slice(0, -1); // Remove the last '-' from operators
       }
-  
+
       // Now extract the last operator in the sequence
       const lastOperator = operators[operators.length - 1];
-  
+
       return { A, lastOperator, C };
     }
-  
+
     // If the expression doesn't match the expected format, return null
     return null;
-  };
+};
 
-  handleButtonClick = (value) => {
+
+handleButtonClick = (value) => {
     console.log("Button received in Displayer:", value);
     
     value = this.formater(value)
@@ -304,13 +312,36 @@ class Displayer extends React.Component {
         
       case "=":
         try {
-          console.log("Evaluating expression:", this.state.expression);
-          const result = eval(this.state.expression);
-          if (!isNaN(result)) {
-            this.setState({ 
-              result: parseFloat(result),
-              expression: String(parseFloat(result)) 
-          });
+          console.log("Original expression:", this.state.expression);
+
+          // Use parseExpression to adjust the expression before evaluating it
+          const parsed = this.parseExpression(this.state.expression);
+          
+          // If parseExpression returns a valid result, modify the expression
+          if (parsed) {
+            const { A, lastOperator, C } = parsed;
+            // Create the modified expression using A, lastOperator, and C
+            const modifiedExpression = `${A}${lastOperator}${C}`;
+            console.log("Modified expression:", modifiedExpression);
+
+            // Evaluate the modified expression
+            const result = eval(modifiedExpression);
+            if (!isNaN(result)) {
+              this.setState({ 
+                result: parseFloat(result),
+                expression: String(parseFloat(result)) 
+              });
+            }
+          } else {
+            // If parseExpression fails, just evaluate the original expression
+            console.log("Using original expression.");
+            const result = eval(this.state.expression);
+            if (!isNaN(result)) {
+              this.setState({ 
+                result: parseFloat(result),
+                expression: String(parseFloat(result)) 
+              });
+            }
           }
 
         } catch (error) {
