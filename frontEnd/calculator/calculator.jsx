@@ -259,6 +259,33 @@ class Displayer extends React.Component {
   formater = (value) => {
     return String(value).replace(/\n/g, '').trim();
   }
+  
+  parseExpression = (expr) => {
+    // Step 1: Split the expression into A, B, and C using regex
+    const match = expr.match(/^([+-]?\d+)([+\-*/]+)([+-]?\d+)$/);
+  
+    if (match) {
+      const A = match[1]; // First number (can have a leading '-')
+      const B = match[2]; // Operators (could be multiple)
+      const C = match[3]; // Second number (can have a leading '-')
+  
+      // Step 2: Handle negative sign at the end of the operator sequence
+      let operators = B;
+      
+      // Check if the last character of the operator part is a negative sign and adjust
+      if (operators[operators.length - 1] === '-') {
+        operators = operators.slice(0, -1); // Remove the last '-' from operators
+      }
+  
+      // Now extract the last operator in the sequence
+      const lastOperator = operators[operators.length - 1];
+  
+      return { A, lastOperator, C };
+    }
+  
+    // If the expression doesn't match the expected format, return null
+    return null;
+  };
 
   handleButtonClick = (value) => {
     console.log("Button received in Displayer:", value);
@@ -277,6 +304,7 @@ class Displayer extends React.Component {
         
       case "=":
         try {
+          console.log("Evaluating expression:", this.state.expression);
           const result = eval(this.state.expression);
           if (!isNaN(result)) {
             this.setState({ 
@@ -302,32 +330,50 @@ class Displayer extends React.Component {
         // Handle consecutive operators, keeping only the last one (excluding the negative sign)
         if (["+", "-", "*", "/"].includes(value)) {
           const lastChar = expression.slice(-1);
-
-          // Allow "-" if it's part of a negative number
-          if (value === "-" && ["+", "-", "*", "/"].includes(lastChar)) {
-            if (expression.length > 1 && ["+", "*", "/"].includes(expression.slice(-2, -1))) {
-              // Replace the last operator with the negative sign
+          const secondLastChar = expression.slice(-2, -1);
+          const thirdLastChar = expression.slice(-3, -2);
+        
+          // Allow "*-" or "/-" for negative numbers
+          if (value === "-" && ["+", "*", "/"].includes(lastChar)) {
+            this.setState(prevState => ({
+              expression: prevState.expression + value
+            }));
+            return;
+          }
+        
+          // If last character is an operator, replace it with the new one
+          if (["+", "-", "*", "/"].includes(lastChar)) {
+            // If we have *-+, replace with *+
+            if (secondLastChar === "-" && ["+", "*", "/"].includes(thirdLastChar)) {
+              this.setState(prevState => ({
+                expression: prevState.expression.slice(0, -2) + value
+              }));
+              return;
+            }
+        
+            // If we have *+, replace with +
+            if (["+", "*", "/"].includes(secondLastChar)) {
               this.setState(prevState => ({
                 expression: prevState.expression.slice(0, -1) + value
               }));
-            } else {
-              // Append "-" if it's valid
-              this.setState(prevState => ({
-                expression: prevState.expression + value
-              }));
+              return;
             }
-            return;
-          }
-
-          // For other operators, replace the last operator with the new one
-          if (["+", "-", "*", "/"].includes(lastChar)) {
+        
+            // General case: replace last operator with new one
             this.setState(prevState => ({
               expression: prevState.expression.slice(0, -1) + value
             }));
             return;
           }
+        
+          // If the second-last character is an operator and the last one is "-", replace both with the new operator (except for *- and /-)
+          if (["+", "*", "/"].includes(secondLastChar) && lastChar === "-") {
+            this.setState(prevState => ({
+              expression: prevState.expression.slice(0, -2) + value
+            }));
+            return;
+          }
         }
-
 
         // Prevent invalid starting characters
         if (expression === "" && ["+", "*", "/"].includes(value)) {
@@ -399,49 +445,3 @@ class BoilerPlate extends React.Component {
     )
   }
 }
-
-
-
-
-// class Display extends React.Component {
-//   constructor(props) {
-//     super(props)
-//     this.state = {
-//       expression: "",
-//       result: 0
-//     }
-//   }
-
-//   componentDidUpdate(prevProps) {
-//     if (this.props.expression !== prevProps.expression) {
-//       this.setState({ 
-//         expression: this.props.expression 
-//       });
-//     }
-//     if (this.props.result !== prevProps.result) {
-//       this.setState({ 
-//         result: this.props.result 
-//       });
-//     }
-//   }
-
-//   render() {
-//     return (
-//       <div>
-//         {/* Expression Box */}
-//         <div className="card p-3 mb-1 bg-light">
-//           <p className="text-end fs-4 mb-0 font-monospace text-muted">
-//             {this.state.expression.trim()}
-//           </p>
-//         </div>
-        
-//         {/* Result Box */}
-//         <div id="display" className="card p-3 mb-3 bg-light">
-//           <p className="text-end fs-3 mb-0 font-monospace text-dark">
-//             {this.state.result}
-//           </p>
-//         </div>
-//       </div>
-//     );
-//   }
-// }
