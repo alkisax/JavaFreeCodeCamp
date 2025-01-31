@@ -8,11 +8,11 @@ class Keypad extends React.Component {
     }
   }
   expressionComponentSpliter = (expression) => {
-    const testExpression = "-12 *+ 3 /*+- -4 -5 -"
+    const testExpression = "-12 *+ 3022 /*+- -4.2 -5 -"
     let expressionComponents = []
     let expComponent = ""
 
-    let isNumRegex = /^[0-9]$/
+    let isNumRegex = /^[0-9.]$/
     let isOperatorRegex = /^[-+*/]$/;
 
     const charENUM = ["Num", "NaN", "none"]
@@ -41,7 +41,8 @@ class Keypad extends React.Component {
 
   // this.props.updateTestExpression(testExpression)
   const unaryExpComponents = this.expressionUnaryFixer(expressionComponents)
-  this.props.updateTestExpression(unaryExpComponents)
+  const oparatorReduced = this.operatorReducer(unaryExpComponents)
+  this.props.updateTestExpression(oparatorReduced)
   return expressionComponents
   }
 
@@ -51,10 +52,10 @@ class Keypad extends React.Component {
     console.log("after trim : ", expressionComponents)
 
 
-    const isNumRegex = /^[0-9]$/
+    const isNumRegex = /^[0-9.]$/
     const isOperatorRegex = /^[+\-*/]+$/;
     for (let i = 0; i < expressionComponents.length; i++){
-      console.log("checking component: ", expressionComponents[i])
+      // console.log("checking component: ", expressionComponents[i])
       //if is an oparator component
       if (isOperatorRegex.test(expressionComponents[i])) {
         console.log("its indeed operator component: ",expressionComponents[i])
@@ -82,10 +83,10 @@ class Keypad extends React.Component {
             // if (i + 1 < expressionComponents.length){
             //   TODO
             // }
-            console.log("expressionComponents[i+1] ",expressionComponents[i+1])
+            // console.log("expressionComponents[i+1] ",expressionComponents[i+1])
             expressionComponents[i+1] = "-" + expressionComponents[i+1]
             // Remove the last character from the operator sequence
-            console.log("expressionComponents[i] ",expressionComponents[i])
+            // console.log("expressionComponents[i] ",expressionComponents[i])
             expressionComponents[i] = expressionComponents[i].slice(0, -1);
             // expressionComponents[i] = expressionComponents[i].slice(0,expressionComponents[i].length - 1)
           } else {
@@ -98,6 +99,25 @@ class Keypad extends React.Component {
     const unaryExpComponents = expressionComponents
     console.log(unaryExpComponents)
     return unaryExpComponents
+  }
+
+  operatorReducer = (unaryExpComponents) => {
+    console.log("**reducer**")
+    const isNumRegex = /^[0-9.]$/
+    const isOperatorRegex = /^[+\-*/]+$/;
+    for (let i = 0; i < unaryExpComponents.length; i++){
+      // console.log(i)
+      if (isOperatorRegex.test(unaryExpComponents[i])
+        &&
+        unaryExpComponents[i].length !== 1
+      ) {
+        console.log("starting oparator reducer for ", unaryExpComponents[i])
+        unaryExpComponents[i] = unaryExpComponents[i].slice(-1);
+        console.log("reduced ",unaryExpComponents[i])
+      }
+    }
+    const finalExp = unaryExpComponents
+    return finalExp
   }
 
   expressionFormater = (expression) => {
