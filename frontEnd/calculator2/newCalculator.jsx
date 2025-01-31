@@ -1,3 +1,94 @@
+const testExpression = "-2+*4/-2"
+
+const expressionUnaryFixer = (expressionComponents) => {
+  //trim expression components
+  expressionComponents = expressionComponents.map(component => component.replaceAll(" ", ""));
+  console.log("after trim : ", expressionComponents)
+
+
+  const isNumRegex = /^[0-9.]$/
+  const isOperatorRegex = /^[+\-*/]+$/;
+  for (let i = 0; i < expressionComponents.length; i++){
+    // console.log("checking component: ", expressionComponents[i])
+    //if is an oparator component
+    if (isOperatorRegex.test(expressionComponents[i])) {
+      console.log("its indeed operator component: ",expressionComponents[i])
+      if (i === expressionComponents.length - 1) {
+        "there is indeed trailing oparators"
+        expressionComponents.splice(i, 1)
+        break
+      }
+      // if oparator component has only one oparator
+      if (expressionComponents[i].length === 1) {
+        // if has only one but its the first then its a - and convert it to unary oparator
+        if (i === 0 && expressionComponents[i][0] == "-"){
+          expressionComponents[i+1] = "-" + expressionComponents[i+1] // add - to next(i+1)  number set
+          expressionComponents.splice(0,1) // remove the first element
+          i--; // Adjust index after splicing
+        } else if (i !== 0 && expressionComponents[i][0] == "-") {
+          continue //leave it as it is
+        }
+      // now check if its a bunch of oparators if it finishes in - like +-*/*-+-
+      } else if (expressionComponents[i].length !== 1){
+        console.log("found banch of operators ", expressionComponents[i])
+        // checks the i-th componenents last oparator
+        if (expressionComponents[i][expressionComponents[i].length - 1] === "-") {
+          // Ensure next element exists
+          // if (i + 1 < expressionComponents.length){
+          //   TODO
+          // }
+          // console.log("expressionComponents[i+1] ",expressionComponents[i+1])
+          expressionComponents[i+1] = "-" + expressionComponents[i+1]
+          // Remove the last character from the operator sequence
+          // console.log("expressionComponents[i] ",expressionComponents[i])
+          expressionComponents[i] = expressionComponents[i].slice(0, -1);
+          // expressionComponents[i] = expressionComponents[i].slice(0,expressionComponents[i].length - 1)
+        } else {
+          continue
+        }
+      }
+    }
+    // console.log(i)
+  }
+  const unaryExpComponents = expressionComponents
+  console.log(unaryExpComponents)
+  return unaryExpComponents
+}
+
+const operatorReducer = (unaryExpComponents) => {
+  console.log("**reducer**")
+  const isNumRegex = /^[0-9.]$/
+  const isOperatorRegex = /^[+\-*/]+$/;
+  for (let i = 0; i < unaryExpComponents.length; i++){
+    // console.log(i)
+    if (isOperatorRegex.test(unaryExpComponents[i])
+      &&
+      unaryExpComponents[i].length !== 1
+    ) {
+      console.log("starting oparator reducer for ", unaryExpComponents[i])
+      unaryExpComponents[i] = unaryExpComponents[i].slice(-1);
+      console.log("reduced ",unaryExpComponents[i])
+    }
+  }
+  const finalExp = unaryExpComponents
+  console.log(finalExp)
+  return finalExp
+}
+
+const serialiazeExp = (operatorReduced) => {
+  let final = operatorReduced.join("")
+  console.log("final: ",final)
+  return final
+}
+
+const functionizerExp = (final) => {
+  // Replace double negative signs with positive
+  final = final.replace(/--/g, '+');
+  // Handle multiple operations (additions, subtractions, etc.)
+  const result = new Function('return ' + final)().toFixed(4);
+  return result;
+};
+
 
 
 class Keypad extends React.Component {
@@ -8,7 +99,6 @@ class Keypad extends React.Component {
     }
   }
   expressionComponentSpliter = (expression) => {
-    const testExpression = "-12 *+ 3022 /*+- -4.2 -5 -"
     let expressionComponents = []
     let expComponent = ""
 
@@ -40,92 +130,14 @@ class Keypad extends React.Component {
     console.log(expressionComponents)
 
   // this.props.updateTestExpression(testExpression)
-  const unaryExpComponents = this.expressionUnaryFixer(expressionComponents)
-  const oparatorReduced = this.operatorReducer(unaryExpComponents)
-  const final = this.serialiazeExp(oparatorReduced)
-  this.props.updateTestExpression(final)
+  const unaryExpComponents = expressionUnaryFixer(expressionComponents)
+  const oparatorReduced = operatorReducer(unaryExpComponents)
+  const final = serialiazeExp(oparatorReduced)
+  const result = functionizerExp(final)
+
+  this.props.updateTestExpression(result)
+
   return expressionComponents
-  }
-
-  expressionUnaryFixer = (expressionComponents) => {
-    //trim expression components
-    expressionComponents = expressionComponents.map(component => component.replaceAll(" ", ""));
-    console.log("after trim : ", expressionComponents)
-
-
-    const isNumRegex = /^[0-9.]$/
-    const isOperatorRegex = /^[+\-*/]+$/;
-    for (let i = 0; i < expressionComponents.length; i++){
-      // console.log("checking component: ", expressionComponents[i])
-      //if is an oparator component
-      if (isOperatorRegex.test(expressionComponents[i])) {
-        console.log("its indeed operator component: ",expressionComponents[i])
-        if (i === expressionComponents.length - 1) {
-          "there is indeed trailing oparators"
-          expressionComponents.splice(i, 1)
-          break
-        }
-        // if oparator component has only one oparator
-        if (expressionComponents[i].length === 1) {
-          // if has only one but its the first then its a - and convert it to unary oparator
-          if (i === 0 && expressionComponents[i][0] == "-"){
-            expressionComponents[i+1] = "-" + expressionComponents[i+1] // add - to next(i+1)  number set
-            expressionComponents.splice(0,1) // remove the first element
-            i--; // Adjust index after splicing
-          } else if (i !== 0 && expressionComponents[i][0] == "-") {
-            continue //leave it as it is
-          }
-        // now check if its a bunch of oparators if it finishes in - like +-*/*-+-
-        } else if (expressionComponents[i].length !== 1){
-          console.log("found banch of operators ", expressionComponents[i])
-          // checks the i-th componenents last oparator
-          if (expressionComponents[i][expressionComponents[i].length - 1] === "-") {
-            // Ensure next element exists
-            // if (i + 1 < expressionComponents.length){
-            //   TODO
-            // }
-            // console.log("expressionComponents[i+1] ",expressionComponents[i+1])
-            expressionComponents[i+1] = "-" + expressionComponents[i+1]
-            // Remove the last character from the operator sequence
-            // console.log("expressionComponents[i] ",expressionComponents[i])
-            expressionComponents[i] = expressionComponents[i].slice(0, -1);
-            // expressionComponents[i] = expressionComponents[i].slice(0,expressionComponents[i].length - 1)
-          } else {
-            continue
-          }
-        }
-      }
-      // console.log(i)
-    }
-    const unaryExpComponents = expressionComponents
-    console.log(unaryExpComponents)
-    return unaryExpComponents
-  }
-
-  operatorReducer = (unaryExpComponents) => {
-    console.log("**reducer**")
-    const isNumRegex = /^[0-9.]$/
-    const isOperatorRegex = /^[+\-*/]+$/;
-    for (let i = 0; i < unaryExpComponents.length; i++){
-      // console.log(i)
-      if (isOperatorRegex.test(unaryExpComponents[i])
-        &&
-        unaryExpComponents[i].length !== 1
-      ) {
-        console.log("starting oparator reducer for ", unaryExpComponents[i])
-        unaryExpComponents[i] = unaryExpComponents[i].slice(-1);
-        console.log("reduced ",unaryExpComponents[i])
-      }
-    }
-    const finalExp = unaryExpComponents
-    console.log(finalExp)
-    return finalExp
-  }
-
-  serialiazeExp = (operatorReduced) => {
-    const final = operatorReduced.join("")
-    console.log("final: ",final)
-    return final
   }
 
   expressionFormater = (expression) => {
