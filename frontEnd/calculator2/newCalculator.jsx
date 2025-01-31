@@ -8,18 +8,46 @@ class Keypad extends React.Component {
     }
   }
   expressionFormater = (expression) => {
-    let part = ""
-    let indexOfPart = 1
-    const arrayOfParts = []
-    const arrayOfOperators = []
-    for (let char of expression) {
-      for (let partChar of)
-      if (char !== "-" && !/\d/.test(char) && indexOfPart){
-        console.log("ERROR wrong expression")
-      } else {
-        part += char
+    const testExpression = "-12 *+ 3 /*+ -4 -5"
+      let testResult = []
+      let expComponent = ""
+
+      let isNumRegex = /^[0-9]$/
+      const charENUM = ["Num", "NaN"]
+      let previousCharType = charENUM[1]
+      let thisCharType = charENUM[1]
+
+      for (const char of testExpression) {
+        if (expComponent.length !== 0) {
+
+          if (isNumRegex.test(char)) {
+            thisCharType = charENUM[0]
+          }
+
+          if (thisCharType === previousCharType) {
+            expComponent += char
+          } else {
+            testResult.push(expComponent)
+            expComponent = char
+            previousCharType = thisCharType
+          }
+        }
+
+        if (isNumRegex.test(char)) {
+          expComponent += char
+          previousCharType = charENUM[0]
+        } else {
+          expComponent += char
+          previousCharType = charENUM[1]
+        }
       }
-    }
+      testResult.push(expComponent); //add last component
+
+    this.props.updateTestExpression(testExpression)
+    return testExpression
+  }
+  componentDidMount(){
+    this.expressionFormater()
   }
   render() {
     return (
@@ -45,12 +73,32 @@ class Keypad extends React.Component {
   }
 }
 
+class TestResulter extends React.Component {
+  constructor(props) {
+    super(props)
+  }
+  render() {
+    return (
+      <div className="container col-4">
+        <div className="card shadow-sm border-0 rounded-3 p-3 text-center bg-light ">
+          {this.props.testExpression}
+        </div>
+      </div>
+    )
+  }
+}
+
 class Displayer extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-
+      testExpression: "",
     }
+  }
+  updateTestExpression = (newExpression) => {
+    this.setState ({
+      testExpression: newExpression
+    })
   }
   handleChange = (event) => {
 
@@ -58,7 +106,13 @@ class Displayer extends React.Component {
   render() {
     return (
       <div>
-        <Keypad />
+        <TestResulter
+          testExpression={this.state.testExpression}
+        />
+        <Keypad 
+          testExpression={this.state.testExpression}
+          updateTestExpression={this.updateTestExpression}
+        />
       </div>
     )
   }
