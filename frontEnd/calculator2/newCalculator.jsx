@@ -1,4 +1,44 @@
-const testExpression = "-2+*4/-2"
+const testExpression = "4/2"
+
+const expressionComponentSpliter = (expression) => {
+  let expressionComponents = []
+  let expComponent = ""
+
+  let isNumRegex = /^[0-9.]$/
+  let isOperatorRegex = /^[-+*/]$/;
+
+  const charENUM = ["Num", "NaN", "none"]
+  let previousCharType = charENUM[2]
+  let thisCharType = charENUM[2]
+
+  if (testExpression === "") {
+    return "enter expression"
+  }
+
+  for (const char of testExpression) {
+    if (isNumRegex.test(char)) {
+      thisCharType = charENUM[0]
+    } else {
+      thisCharType = charENUM[1]
+    } 
+
+    if (thisCharType === previousCharType) {
+      expComponent += char
+    } else {
+      if (expComponent.length !== 0) {
+        expressionComponents.push(expComponent)
+      }
+      expComponent = char
+      previousCharType = thisCharType
+    }
+  }
+  expressionComponents.push(expComponent); //add last
+  console.log(expressionComponents)
+
+  // expressionUnaryFixer(expressionComponents)
+
+  return expressionUnaryFixer(expressionComponents)
+}
 
 const expressionUnaryFixer = (expressionComponents) => {
   //trim expression components
@@ -26,21 +66,15 @@ const expressionUnaryFixer = (expressionComponents) => {
           expressionComponents.splice(0,1) // remove the first element
           i--; // Adjust index after splicing
         } else if (i !== 0 && expressionComponents[i][0] == "-") {
-          continue //leave it as it is
+          continue 
         }
       // now check if its a bunch of oparators if it finishes in - like +-*/*-+-
       } else if (expressionComponents[i].length !== 1){
         console.log("found banch of operators ", expressionComponents[i])
         // checks the i-th componenents last oparator
         if (expressionComponents[i][expressionComponents[i].length - 1] === "-") {
-          // Ensure next element exists
-          // if (i + 1 < expressionComponents.length){
-          //   TODO
-          // }
-          // console.log("expressionComponents[i+1] ",expressionComponents[i+1])
           expressionComponents[i+1] = "-" + expressionComponents[i+1]
           // Remove the last character from the operator sequence
-          // console.log("expressionComponents[i] ",expressionComponents[i])
           expressionComponents[i] = expressionComponents[i].slice(0, -1);
           // expressionComponents[i] = expressionComponents[i].slice(0,expressionComponents[i].length - 1)
         } else {
@@ -48,11 +82,13 @@ const expressionUnaryFixer = (expressionComponents) => {
         }
       }
     }
-    // console.log(i)
   }
   const unaryExpComponents = expressionComponents
   console.log(unaryExpComponents)
-  return unaryExpComponents
+
+  // operatorReducer(unaryExpComponents)
+
+  return operatorReducer(unaryExpComponents)
 }
 
 const operatorReducer = (unaryExpComponents) => {
@@ -72,24 +108,47 @@ const operatorReducer = (unaryExpComponents) => {
   }
   const finalExp = unaryExpComponents
   console.log(finalExp)
-  return finalExp
+
+  serialiazeExp(finalExp)
+
+  return serialiazeExp(finalExp)
 }
 
-const serialiazeExp = (operatorReduced) => {
-  let final = operatorReduced.join("")
+const serialiazeExp = (finalExp) => {
+  let final = finalExp.join("")
   console.log("final: ",final)
-  return final
+  // functionizerExp(final)
+
+  return functionizerExp(final)
 }
 
 const functionizerExp = (final) => {
   // Replace double negative signs with positive
   final = final.replace(/--/g, '+');
-  // Handle multiple operations (additions, subtractions, etc.)
-  const result = new Function('return ' + final)().toFixed(4);
-  return result;
+
+  let result = new Function('return ' + final)();
+
+  if (Number.isInteger(result)) {
+    return result
+  } else {
+    return parseFloat(result.toFixed(4))
+  }
 };
 
-
+/*
+flow of state
+there is a state in Displayer that acts as a parent
+resulter has access to this state through:
+        <Resulter testExpression={this.state.testExpression} />
+and keypad has acces to the state and to the function updateTestExpression through
+        <Keypad testExpression={this.state.testExpression} updateTestExpression={this.updateTestExpression} />
+Update teste expression only take a (parameter) and just sets a new state.
+Now both keypad and resulter can access the state as props.
+keypad calls upadateTestExpression and passes it its result in the logicCaller as 
+    this.props.updateTestExpression(result)
+and resulter only renders it in
+          {this.props.testExpression}
+*/
 
 class Keypad extends React.Component {
   constructor(props) {
@@ -98,85 +157,106 @@ class Keypad extends React.Component {
 
     }
   }
-  expressionComponentSpliter = (expression) => {
-    let expressionComponents = []
-    let expComponent = ""
-
-    let isNumRegex = /^[0-9.]$/
-    let isOperatorRegex = /^[-+*/]$/;
-
-    const charENUM = ["Num", "NaN", "none"]
-    let previousCharType = charENUM[2]
-    let thisCharType = charENUM[2]
-
-    for (const char of testExpression) {
-      if (isNumRegex.test(char)) {
-        thisCharType = charENUM[0]
-      } else {
-        thisCharType = charENUM[1]
-      } 
-
-      if (thisCharType === previousCharType) {
-        expComponent += char
-      } else {
-        if (expComponent.length !== 0) {
-          expressionComponents.push(expComponent)
-        }
-        expComponent = char
-        previousCharType = thisCharType
-      }
-    }
-    expressionComponents.push(expComponent); //add last
-    console.log(expressionComponents)
-
-  // this.props.updateTestExpression(testExpression)
-  const unaryExpComponents = expressionUnaryFixer(expressionComponents)
-  const oparatorReduced = operatorReducer(unaryExpComponents)
-  const final = serialiazeExp(oparatorReduced)
-  const result = functionizerExp(final)
-
-  this.props.updateTestExpression(result)
-
-  return expressionComponents
+  logicCaller = (expression) => {
+    const result = expressionComponentSpliter(expression)
+    this.props.updateTestExpression(result)
   }
-
   expressionFormater = (expression) => {
-    this.expressionComponentSpliter(expression)
+    this.logicCaller(expression)
   }
   componentDidMount(){
     this.expressionFormater()
   }
   render() {
     return (
-      <div className="container col-4">
-        <div className="btn col-3 bg-primary rounded-pill border-black w-100 text-center p-3" id="1">1</div>
-        <div className="btn col-3 bg-primary rounded-pill border-black w-100 text-center p-3" id="2">2</div>
-        <div className="btn col-3 bg-primary rounded-pill border-black w-100 text-center p-3" id="3">3</div>
-        <div className="btn col-3 bg-primary rounded-pill border-black w-100 text-center p-3" id="4">4</div>
-        <div className="btn col-3 bg-primary rounded-pill border-black w-100 text-center p-3" id="5">5</div>
-        <div className="btn col-3 bg-primary rounded-pill border-black w-100 text-center p-3" id="6">6</div>
-        <div className="btn col-3 bg-primary rounded-pill border-black w-100 text-center p-3" id="7">7</div>
-        <div className="btn col-3 bg-primary rounded-pill border-black w-100 text-center p-3" id="8">8</div>
-        <div className="btn col-3 bg-primary rounded-pill border-black w-100 text-center p-3" id="9">9</div>
-        <div className="btn col-3 bg-primary rounded-pill border-black w-100 text-center p-3" id="0">0</div>
-        <div className="btn col-3 bg-primary rounded-pill border-black w-100 text-center p-3" id="+">+</div>
-        <div className="btn col-3 bg-primary rounded-pill border-black w-100 text-center p-3" id="-">-</div>
-        <div className="btn col-3 bg-primary rounded-pill border-black w-100 text-center p-3" id="*">*</div>
-        <div className="btn col-3 bg-primary rounded-pill border-black w-100 text-center p-3" id="/">/</div>
-        <div className="btn col-3 bg-primary rounded-pill border-black w-100 text-center p-3" id="=">=</div>
-        <div className="btn col-3 bg-primary rounded-pill border-black w-100 text-center p-3" id="AC">AC</div>
+      <div
+        className="container p-4 bg-dark"
+        style={{
+          border: '2px solid #333',
+          maxWidth: '250px',   // Set a max width for the container
+          width: '100%',       // Ensure the container takes up the full available space within the max width
+        }}
+      >
+        {/* A -> 789/ */}
+        <div className="row d-flex justify-content-between mb-2">
+          <div className="btn col-3 bg-warning rounded-circle text-center p-3" id="7">
+            7
+          </div>
+          <div className="btn col-3 bg-warning rounded-circle text-center p-3" id="8">
+            8
+          </div>
+          <div className="btn col-3 bg-warning rounded-circle text-center p-3" id="9">
+            9
+          </div>
+          <div className="btn col-3 bg-info rounded-circle text-center p-3" id="/">
+            /
+          </div>
+        </div>
+  
+        {/* B -> 456* */}
+        <div className="row d-flex justify-content-between mb-2">
+          <div className="btn col-3 bg-warning rounded-circle text-center p-3" id="4">
+            4
+          </div>
+          <div className="btn col-3 bg-warning rounded-circle text-center p-3" id="5">
+            5
+          </div>
+          <div className="btn col-3 bg-warning rounded-circle text-center p-3" id="6">
+            6
+          </div>
+          <div className="btn col-3 bg-info rounded-circle text-center p-3" id="*">
+            *
+          </div>
+        </div>
+  
+        {/* C -> 123- */}
+        <div className="row d-flex justify-content-between mb-2">
+          <div className="btn col-3 bg-warning rounded-circle text-center p-3" id="1">
+            1
+          </div>
+          <div className="btn col-3 bg-warning rounded-circle text-center p-3" id="2">
+            2
+          </div>
+          <div className="btn col-3 bg-warning rounded-circle text-center p-3" id="3">
+            3
+          </div>
+          <div className="btn col-3 bg-info rounded-circle text-center p-3" id="-">
+            -
+          </div>
+        </div>
+  
+        {/* D -> 0.+= */}
+        <div className="row d-flex justify-content-between mb-2">
+          <div className="btn col-3 bg-warning rounded-circle text-center p-3" id="0">
+            0
+          </div>
+          <div className="btn col-3 bg-warning rounded-circle text-center p-3" id=".">
+            .
+          </div>
+          <div className="btn col-3 bg-info rounded-circle text-center p-3" id="+">
+            +
+          </div>
+          <div className="btn col-3 bg-info rounded-circle text-center p-3" id="=">
+            =
+          </div>
+        </div>
+  
+        {/* AC button */}
+        <div className="btn col-12 bg-danger text-center p-3 font-weight-bold rounded" id="AC">
+          AC
+        </div>
       </div>
-    )
-  }
-}
+    );
+  }  
+}  
 
-class TestResulter extends React.Component {
+class Resulter extends React.Component {
   constructor(props) {
     super(props)
   }
   render() {
     return (
-      <div className="container col-4">
+      <div className="container ">
         <div className="card shadow-sm border-0 rounded-3 p-3 text-center bg-light ">
           {this.props.testExpression}
         </div>
@@ -197,13 +277,10 @@ class Displayer extends React.Component {
       testExpression: newExpression
     })
   }
-  handleChange = (event) => {
-
-  }
   render() {
     return (
-      <div>
-        <TestResulter
+      <div className="container p-4 bg-dark" style={{ maxWidth: '250px', border: '2px solid #333' }}>
+        <Resulter
           testExpression={this.state.testExpression}
         />
         <Keypad 
