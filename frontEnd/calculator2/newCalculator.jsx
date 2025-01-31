@@ -7,44 +7,78 @@ class Keypad extends React.Component {
 
     }
   }
-  expressionFormater = (expression) => {
+  expressionComponentSpliter = (expression) => {
     const testExpression = "-12 *+ 3 /*+ -4 -5"
-      let testResult = []
-      let expComponent = ""
+    let expressionComponents = []
+    let expComponent = ""
 
-      let isNumRegex = /^[0-9]$/
-      const charENUM = ["Num", "NaN"]
-      let previousCharType = charENUM[1]
-      let thisCharType = charENUM[1]
+    let isNumRegex = /^[0-9]$/
+    let isOperatorRegex = /^[-+*/]$/;
 
-      for (const char of testExpression) {
+    const charENUM = ["Num", "NaN", "none"]
+    let previousCharType = charENUM[2]
+    let thisCharType = charENUM[2]
+
+    for (const char of testExpression) {
+      if (isNumRegex.test(char)) {
+        thisCharType = charENUM[0]
+      } else {
+        thisCharType = charENUM[1]
+      } 
+
+      if (thisCharType === previousCharType) {
+        expComponent += char
+      } else {
         if (expComponent.length !== 0) {
-
-          if (isNumRegex.test(char)) {
-            thisCharType = charENUM[0]
-          }
-
-          if (thisCharType === previousCharType) {
-            expComponent += char
-          } else {
-            testResult.push(expComponent)
-            expComponent = char
-            previousCharType = thisCharType
-          }
+          expressionComponents.push(expComponent)
         }
+        expComponent = char
+        previousCharType = thisCharType
+      }
+    }
+    expressionComponents.push(expComponent); //add last
+    console.log(expressionComponents)
 
-        if (isNumRegex.test(char)) {
-          expComponent += char
-          previousCharType = charENUM[0]
-        } else {
-          expComponent += char
-          previousCharType = charENUM[1]
+  // this.props.updateTestExpression(testExpression)
+  this.props.updateTestExpression(expressionComponents)
+  return expressionComponents
+  }
+
+  expressionUnaryFixer = (expressionComponents) => {
+    const isNumRegex = /^[0-9]$/
+    const isOperatorRegex = /^[-+*/]$/
+    for (let i = 0; i < expressionComponents.length; i++){
+      //if is an oparator component
+      if (isOperatorRegex.test(expressionComponents[i])) {
+        // if oparator component has only one oparator
+        if (expressionComponents[i].length === 1) {
+          // if has only one but its the first then its a - and convert it to unary oparator
+          if (i === 0 && expressionComponents[i][0] == "-"){
+            expressionComponents[i+1] = "-" + expressionComponents[i+1] // add - to next(i+1)  number set
+            expressionComponents.splice(0,1) // remove the first element            
+          } else if (i !== 0 && expressionComponents[i][0] == "-") {
+            continue //leave it as it is
+          }
+        // now check if its a bunch of oparators if it finishes in - like +-*/*-+-
+        } else if (expressionComponents[i].length !== 1){
+          // checks the i-th componenents last oparator
+          if (expressionComponents[i][expressionComponents[i].length - 1] === "-") {
+            expressionComponents[i+1] = "-" + expressionComponents[i+1]
+            // Remove the last character from the operator sequence
+            expressionComponents[i] = expressionComponents[i].slice(0,expressionComponents[i].length - 1)
+          } else {
+            continue
+          }
         }
       }
-      testResult.push(expComponent); //add last component
+    }
+    const unaryExpComponents = expressionComponents
+    console.log(unaryExpComponents)
+    return unaryExpComponents
+  }
 
-    this.props.updateTestExpression(testExpression)
-    return testExpression
+  expressionFormater = (expression) => {
+    this.expressionComponentSpliter(expression)
   }
   componentDidMount(){
     this.expressionFormater()
