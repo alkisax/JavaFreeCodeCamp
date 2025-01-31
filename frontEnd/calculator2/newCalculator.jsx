@@ -1,4 +1,4 @@
-const testExpression = "5/4"
+const testExpression = ""
 
 const expressionComponentSpliter = (expression) => {
   let expressionComponents = []
@@ -171,8 +171,8 @@ class Keypad extends React.Component {
     if (button === "AC") {
       this.inputer("AC")
     }
-    if (button === "equals") {
-      this.inputer("equals")
+    if (button === "=") {
+      this.inputer("=")
     }
   }
 
@@ -188,10 +188,10 @@ class Keypad extends React.Component {
         this.inputer("AC")
         break
       case "=":
-        this.inputer("equals")
+        this.inputer("=")
         break
       case "Enter":
-        this.inputer("equals")
+        this.inputer("=")
         break
       case "x":
         this.inputer("*")
@@ -220,7 +220,7 @@ class Keypad extends React.Component {
     if (value === "AC") {
       console.log("AC")
     }
-    if (value === "equals") {
+    if (value === "=") {
       console.log("equals pressed")
     }
   }
@@ -338,6 +338,7 @@ class Displayer extends React.Component {
     this.state = {
       testExpression: "",
       expression: "",
+      result: "",
     }
   }
   updateExpression = (inputExpression) => {
@@ -350,18 +351,26 @@ class Displayer extends React.Component {
       testExpression: newExpression
     })
   }
+  updateResult = (result) => {
+    this.setState ({
+      result: result
+    })
+  }
   render() {
     return (
       <div className="container p-4 bg-dark" style={{ maxWidth: '250px', border: '2px solid #333' }}>
         <Resulter
           testExpression={this.state.testExpression}
           expression={this.state.expression}
+          result={this.state.result}
         />
         <Keypad 
           testExpression={this.state.testExpression}
           updateTestExpression={this.updateTestExpression}
           expression={this.state.expression}
           updateExpression={this.updateExpression}
+          result={this.state.result}
+          updateResult={this.updateResult}
         />
       </div>
     )
