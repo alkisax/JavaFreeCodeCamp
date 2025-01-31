@@ -1,6 +1,7 @@
-const testExpression = ""
+const testExpression = "2+2"
 
 const expressionComponentSpliter = (expression) => {
+  console.log("inputed expression: ", expression)
   let expressionComponents = []
   let expComponent = ""
 
@@ -11,11 +12,13 @@ const expressionComponentSpliter = (expression) => {
   let previousCharType = charENUM[2]
   let thisCharType = charENUM[2]
 
-  if (testExpression === "") {
+  // if (testExpression === "") {
+  if (expression === "") {
     return "enter expression"
   }
 
-  for (const char of testExpression) {
+  // for (const char of testExpression) {
+  for (const char of expression) {
     if (isNumRegex.test(char)) {
       thisCharType = charENUM[0]
     } else {
@@ -219,14 +222,17 @@ class Keypad extends React.Component {
     }
     if (value === "AC") {
       console.log("AC")
+      this.props.updateExpression("")
+      // this.props.updateResult("")
+      this.logicCaller("")
     }
     if (value === "=") {
+      this.logicCaller(this.props.expression)
       console.log("equals pressed")
     }
   }
 
   componentDidMount(){
-    this.logicCaller()
     document.addEventListener("keydown", this.keyboardHandler)
   }
   //this needs to be explained
