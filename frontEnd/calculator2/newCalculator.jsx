@@ -40,37 +40,55 @@ class Keypad extends React.Component {
     console.log(expressionComponents)
 
   // this.props.updateTestExpression(testExpression)
-  this.props.updateTestExpression(expressionComponents)
+  const unaryExpComponents = this.expressionUnaryFixer(expressionComponents)
+  this.props.updateTestExpression(unaryExpComponents)
   return expressionComponents
   }
 
   expressionUnaryFixer = (expressionComponents) => {
+    //trim expression components
+    expressionComponents = expressionComponents.map(component => component.replaceAll(" ", ""));
+    console.log("after trim : ", expressionComponents)
+
+
     const isNumRegex = /^[0-9]$/
-    const isOperatorRegex = /^[-+*/]$/
+    const isOperatorRegex = /^[+\-*/]+$/;
     for (let i = 0; i < expressionComponents.length; i++){
+      console.log("checking component: ", expressionComponents[i])
       //if is an oparator component
       if (isOperatorRegex.test(expressionComponents[i])) {
+        console.log("its indeed operator component: ",expressionComponents[i])
         // if oparator component has only one oparator
         if (expressionComponents[i].length === 1) {
           // if has only one but its the first then its a - and convert it to unary oparator
           if (i === 0 && expressionComponents[i][0] == "-"){
             expressionComponents[i+1] = "-" + expressionComponents[i+1] // add - to next(i+1)  number set
-            expressionComponents.splice(0,1) // remove the first element            
+            expressionComponents.splice(0,1) // remove the first element
+            i--; // Adjust index after splicing
           } else if (i !== 0 && expressionComponents[i][0] == "-") {
             continue //leave it as it is
           }
         // now check if its a bunch of oparators if it finishes in - like +-*/*-+-
         } else if (expressionComponents[i].length !== 1){
+          console.log("found banch of operators ", expressionComponents[i])
           // checks the i-th componenents last oparator
           if (expressionComponents[i][expressionComponents[i].length - 1] === "-") {
+            // Ensure next element exists
+            // if (i + 1 < expressionComponents.length){
+            //   TODO
+            // }
+            console.log("expressionComponents[i+1] ",expressionComponents[i+1])
             expressionComponents[i+1] = "-" + expressionComponents[i+1]
             // Remove the last character from the operator sequence
-            expressionComponents[i] = expressionComponents[i].slice(0,expressionComponents[i].length - 1)
+            console.log("expressionComponents[i] ",expressionComponents[i])
+            expressionComponents[i] = expressionComponents[i].slice(0, -1);
+            // expressionComponents[i] = expressionComponents[i].slice(0,expressionComponents[i].length - 1)
           } else {
             continue
           }
         }
       }
+      // console.log(i)
     }
     const unaryExpComponents = expressionComponents
     console.log(unaryExpComponents)
