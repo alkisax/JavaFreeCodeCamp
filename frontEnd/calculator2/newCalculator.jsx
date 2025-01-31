@@ -199,6 +199,8 @@ class Keypad extends React.Component {
       case "x":
         this.inputer("*")
         break
+      case "Backspace":
+        this.inputer("back")
       case "z":
         this.inputer("z")
         break
@@ -211,14 +213,38 @@ class Keypad extends React.Component {
     }
   }
 
+  checker = (expression, value) => {
+    // Prevent multiple leading zeros
+    if (value === "0") {
+      const lastNumber = expression.split(/[-+*/]/).pop(); // Get last number
+      if (lastNumber === "0") {
+        return false; // Block input if number is just "0"
+      }
+    }
+  
+    // Prevent multiple decimal points in one number
+    if (value === ".") {
+      const lastNumber = expression.split(/[-+*/]/).pop(); // Get last number
+      if (lastNumber.includes(".")) {
+        return false; // Block input if number already has a decimal
+      }
+    }
+  
+    return true; // Allow valid inputs
+  };
+  
   inputer = (value) => {
-    if (value >= 0 && value <= 9) {
+    if (value >= 0 && value <= 9 || value === ".") {
+      if (!this.checker(this.props.expression, value)) return; 
       this.props.updateExpression(this.props.expression + value)
       console.log(this.props.expression)
     }
-    if (value === "+" || value === "-" || value === "*" || value === "/" || value === "."){
+    if (value === "+" || value === "-" || value === "*" || value === "/" ){
       this.props.updateExpression(this.props.expression + value)
       console.log(this.props.expression)
+    }
+    if (value === "back") {
+      this.props.updateExpression(this.props.expression.slice(0, -1)); // Removes the last character
     }
     if (value === "AC") {
       console.log("AC")
