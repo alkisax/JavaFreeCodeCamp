@@ -1,4 +1,4 @@
-const testExpression = "4/2"
+const testExpression = "5/4"
 
 const expressionComponentSpliter = (expression) => {
   let expressionComponents = []
@@ -153,19 +153,85 @@ and resulter only renders it in
 class Keypad extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {
-
-    }
   }
+
   logicCaller = (expression) => {
     const result = expressionComponentSpliter(expression)
     this.props.updateTestExpression(result)
   }
-  expressionFormater = (expression) => {
-    this.logicCaller(expression)
+
+  buttonHandler = (button) => {
+    if (button >= "0" && button <= "9") {
+      this.inputer(button)
+    }
+    if (button === "+" || button === "-" || button === "*" || button === "/" || button === "."){
+      console.log(button, " is pressed")
+      this.inputer(button)
+    }
+    if (button === "AC") {
+      this.inputer("AC")
+    }
+    if (button === "equals") {
+      this.inputer("equals")
+    }
   }
+
+  keyboardHandler = (event) => {
+    const key = event.key.toLowerCase();
+    switch (event.key) {
+      case "0": case "1": case "2": case "3": case "4": 
+      case "5": case "6": case "7": case "8": case "9": 
+      case "+": case "-": case "*": case "/": case ".": 
+        this.inputer(event.key)
+        break
+      case "Escape":
+        this.inputer("AC")
+        break
+      case "=":
+        this.inputer("equals")
+        break
+      case "Enter":
+        this.inputer("equals")
+        break
+      case "x":
+        this.inputer("*")
+        break
+      case "z":
+        this.inputer("z")
+        break
+      default:
+        if (event.shiftKey) {
+          return; // Ignore Shift key events
+        }
+        console.log("ERROR: Unknown key");
+        return;
+    }
+  }
+
+  inputer = (value) => {
+    if (value >= 0 && value <= 9) {
+      this.props.updateExpression(this.props.expression + value)
+      console.log(this.props.expression)
+    }
+    if (value === "+" || value === "-" || value === "*" || value === "/" || value === "."){
+      this.props.updateExpression(this.props.expression + value)
+      console.log(this.props.expression)
+    }
+    if (value === "AC") {
+      console.log("AC")
+    }
+    if (value === "equals") {
+      console.log("equals pressed")
+    }
+  }
+
   componentDidMount(){
-    this.expressionFormater()
+    this.logicCaller()
+    document.addEventListener("keydown", this.keyboardHandler)
+  }
+  //this needs to be explained
+  componentWillUnmount(){
+    document.removeEventListener("keydown", this.keyboardHandler)
   }
   render() {
     return (
@@ -179,70 +245,70 @@ class Keypad extends React.Component {
       >
         {/* A -> 789/ */}
         <div className="row d-flex justify-content-between mb-2">
-          <div className="btn col-3 bg-warning rounded-circle text-center p-3" id="7">
+          <div onClick={() => this.buttonHandler("7")} className="btn col-3 bg-warning rounded-circle text-center p-3" id="7">
             7
           </div>
-          <div className="btn col-3 bg-warning rounded-circle text-center p-3" id="8">
+          <div onClick={() => this.buttonHandler("8")}  className="btn col-3 bg-warning rounded-circle text-center p-3" id="8">
             8
           </div>
-          <div className="btn col-3 bg-warning rounded-circle text-center p-3" id="9">
+          <div onClick={() => this.buttonHandler("9")}  className="btn col-3 bg-warning rounded-circle text-center p-3" id="9">
             9
           </div>
-          <div className="btn col-3 bg-info rounded-circle text-center p-3" id="/">
+          <div onClick={() => this.buttonHandler("/")} className="btn col-3 bg-info rounded-circle text-center p-3" id="/">
             /
           </div>
         </div>
   
         {/* B -> 456* */}
         <div className="row d-flex justify-content-between mb-2">
-          <div className="btn col-3 bg-warning rounded-circle text-center p-3" id="4">
+          <div onClick={() => this.buttonHandler("4")}  className="btn col-3 bg-warning rounded-circle text-center p-3" id="4">
             4
           </div>
-          <div className="btn col-3 bg-warning rounded-circle text-center p-3" id="5">
+          <div onClick={() => this.buttonHandler("5")}  className="btn col-3 bg-warning rounded-circle text-center p-3" id="5">
             5
           </div>
-          <div className="btn col-3 bg-warning rounded-circle text-center p-3" id="6">
+          <div onClick={() => this.buttonHandler("6")}  className="btn col-3 bg-warning rounded-circle text-center p-3" id="6">
             6
           </div>
-          <div className="btn col-3 bg-info rounded-circle text-center p-3" id="*">
+          <div onClick={() => this.buttonHandler("*")} className="btn col-3 bg-info rounded-circle text-center p-3" id="*">
             *
           </div>
         </div>
   
         {/* C -> 123- */}
         <div className="row d-flex justify-content-between mb-2">
-          <div className="btn col-3 bg-warning rounded-circle text-center p-3" id="1">
+          <div onClick={() => this.buttonHandler("1")}  className="btn col-3 bg-warning rounded-circle text-center p-3" id="1">
             1
           </div>
-          <div className="btn col-3 bg-warning rounded-circle text-center p-3" id="2">
+          <div onClick={() => this.buttonHandler("2")}  className="btn col-3 bg-warning rounded-circle text-center p-3" id="2">
             2
           </div>
-          <div className="btn col-3 bg-warning rounded-circle text-center p-3" id="3">
+          <div onClick={() => this.buttonHandler("3")}  className="btn col-3 bg-warning rounded-circle text-center p-3" id="3">
             3
           </div>
-          <div className="btn col-3 bg-info rounded-circle text-center p-3" id="-">
+          <div onClick={() => this.buttonHandler("-")}  className="btn col-3 bg-info rounded-circle text-center p-3" id="-">
             -
           </div>
         </div>
   
         {/* D -> 0.+= */}
         <div className="row d-flex justify-content-between mb-2">
-          <div className="btn col-3 bg-warning rounded-circle text-center p-3" id="0">
+          <div onClick={() => this.buttonHandler("0")} className="btn col-3 bg-warning rounded-circle text-center p-3" id="0">
             0
           </div>
-          <div className="btn col-3 bg-warning rounded-circle text-center p-3" id=".">
+          <div onClick={() => this.buttonHandler(".")}  className="btn col-3 bg-warning rounded-circle text-center p-3" id=".">
             .
           </div>
-          <div className="btn col-3 bg-info rounded-circle text-center p-3" id="+">
-            +
-          </div>
-          <div className="btn col-3 bg-info rounded-circle text-center p-3" id="=">
+          <div onClick={() => this.buttonHandler("=")}  className="btn col-3 bg-success rounded-circle text-center p-3" id="=">
             =
+          </div>
+          <div onClick={() => this.buttonHandler("+")}  className="btn col-3 bg-info rounded-circle text-center p-3" id="+">
+            +
           </div>
         </div>
   
         {/* AC button */}
-        <div className="btn col-12 bg-danger text-center p-3 font-weight-bold rounded" id="AC">
+        <div onClick={() => this.buttonHandler("AC")}  className="btn col-12 bg-danger text-center p-3 font-weight-bold rounded" id="AC">
           AC
         </div>
       </div>
@@ -258,7 +324,8 @@ class Resulter extends React.Component {
     return (
       <div className="container ">
         <div className="card shadow-sm border-0 rounded-3 p-3 text-center bg-light ">
-          {this.props.testExpression}
+          <p>{this.props.expression}</p>
+          <p>{this.props.testExpression}</p>
         </div>
       </div>
     )
@@ -270,7 +337,13 @@ class Displayer extends React.Component {
     super(props)
     this.state = {
       testExpression: "",
+      expression: "",
     }
+  }
+  updateExpression = (inputExpression) => {
+    this.setState ({
+      expression: inputExpression
+    })
   }
   updateTestExpression = (newExpression) => {
     this.setState ({
@@ -282,10 +355,13 @@ class Displayer extends React.Component {
       <div className="container p-4 bg-dark" style={{ maxWidth: '250px', border: '2px solid #333' }}>
         <Resulter
           testExpression={this.state.testExpression}
+          expression={this.state.expression}
         />
         <Keypad 
           testExpression={this.state.testExpression}
           updateTestExpression={this.updateTestExpression}
+          expression={this.state.expression}
+          updateExpression={this.updateExpression}
         />
       </div>
     )
