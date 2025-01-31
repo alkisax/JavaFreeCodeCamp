@@ -8,7 +8,7 @@ class Keypad extends React.Component {
     }
   }
   expressionComponentSpliter = (expression) => {
-    const testExpression = "-12 *+ 3 /*+ -4 -5"
+    const testExpression = "-12 *+ 3 /*+- -4 -5 -"
     let expressionComponents = []
     let expComponent = ""
 
@@ -58,6 +58,11 @@ class Keypad extends React.Component {
       //if is an oparator component
       if (isOperatorRegex.test(expressionComponents[i])) {
         console.log("its indeed operator component: ",expressionComponents[i])
+        if (i === expressionComponents.length - 1) {
+          "there is indeed trailing oparators"
+          expressionComponents.splice(i, 1)
+          break
+        }
         // if oparator component has only one oparator
         if (expressionComponents[i].length === 1) {
           // if has only one but its the first then its a - and convert it to unary oparator
