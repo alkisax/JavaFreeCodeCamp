@@ -42,7 +42,8 @@ class Keypad extends React.Component {
   // this.props.updateTestExpression(testExpression)
   const unaryExpComponents = this.expressionUnaryFixer(expressionComponents)
   const oparatorReduced = this.operatorReducer(unaryExpComponents)
-  this.props.updateTestExpression(oparatorReduced)
+  const final = this.serialiazeExp(oparatorReduced)
+  this.props.updateTestExpression(final)
   return expressionComponents
   }
 
@@ -117,7 +118,14 @@ class Keypad extends React.Component {
       }
     }
     const finalExp = unaryExpComponents
+    console.log(finalExp)
     return finalExp
+  }
+
+  serialiazeExp = (operatorReduced) => {
+    const final = operatorReduced.join("")
+    console.log("final: ",final)
+    return final
   }
 
   expressionFormater = (expression) => {
