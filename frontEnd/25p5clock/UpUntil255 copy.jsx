@@ -2,9 +2,9 @@ class Displayer extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      breakLength: 5,
-      sessionLength: 25,
-      sessionTime: "25:00",
+      breakLength: 1,
+      sessionLength: 2,
+      sessionTime: "00:02",
       timerRun: false,
       isInSession: false,
       isInBreak: false,
@@ -159,7 +159,6 @@ class Displayer extends React.Component {
             startTimer={this.startTimer}
             timeFormaterSecsToString={this.timeFormaterSecsToString}
             timeFormaterStringToSecs={this.timeFormaterStringToSecs}
-            isInSession={this.state.isInSession}
           />
         </div>
       </div>
@@ -182,15 +181,15 @@ class BreakLength extends React.Component {
   render() {
     return (
       <div className="d-flex justify-content-center flex-column align-items-center">
-        <h5 id="break-label">Break Length</h5>
+        <h5>Break Length</h5>
         <span className="d-flex align-items-center">
-          <i id="break-increment" className="fas fa-arrow-up " 
+          <i className="fas fa-arrow-up " 
             style={{ cursor: 'pointer' }} 
             onClick={this.incrementBreak}></i>
-          <p id="break-length" className="p-2 m-0 mx-2" >
+          <p className="p-2 m-0 mx-2">
             {this.props.breakLength}
           </p>
-          <i id="break-decrement" className="fas fa-arrow-down" 
+          <i className="fas fa-arrow-down" 
             style={{ cursor: 'pointer' }} 
             onClick={this.decrementBreak}></i>
         </span>
@@ -216,11 +215,11 @@ class SessionLength extends React.Component {
       <div className="d-flex justify-content-center flex-column align-items-center">
         <h5>Session Length</h5>
         <span className="d-flex align-items-center">
-          <i id="session-increment" className="fas fa-arrow-up " style={{ cursor: 'pointer' }} onClick={this.incrementSessionLength}></i>
-          <p  id="session-label" className="p-2 m-0 mx-2">
+          <i className="fas fa-arrow-up " style={{ cursor: 'pointer' }} onClick={this.incrementSessionLength}></i>
+          <p className="p-2 m-0 mx-2">
             {this.props.sessionLength}
           </p>
-          <i id="session-decrement" className="fas fa-arrow-down" style={{ cursor: 'pointer' }} onClick={this.decrementSessionLength}></i>
+          <i className="fas fa-arrow-down" style={{ cursor: 'pointer' }} onClick={this.decrementSessionLength}></i>
         </span>
       </div>
     )
@@ -232,18 +231,12 @@ class Session extends React.Component {
     super(props)
   }
   render() {
-    // Determine the timer label based on the isInSession state
-    const timerLabel = this.props.isInSession ? "Session" : "Break";
-
     return (
       <div>
         <div className="d-flex justify-content-center align-items-center">
           <div className="container border border-danger-subtle border-radius-15 text-light text-center">
-            <h3 id="timer-label">{timerLabel}</h3>
-            <p  id="session-length" className="fs-1 font-weight-bold">
-              25               
-            </p>
-            <p id="time-left" className="fs-1 font-weight-bold">
+            <h3>Session</h3>
+            <p className="fs-1 font-weight-bold">
               {this.props.sessionTime}
             </p>
           </div>
@@ -317,7 +310,6 @@ class Buttons extends React.Component {
     return (
       <div>
         <button 
-        id="start_stop"
         className="btn btn-success m-2 col-3" 
         style={{ fontSize: '1rem' }} 
         onClick={this.playHandler}>
@@ -332,7 +324,6 @@ class Buttons extends React.Component {
       </button>
 
       <button 
-        id="reset"
         className=" col-3 btn btn-danger m-2" 
         style={{ fontSize: '1rem' }} 
         onClick={this.restartHandler}>
