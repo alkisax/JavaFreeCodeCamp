@@ -16,36 +16,54 @@ class Displayer extends React.Component {
       return
     }
 
+    // this.setState ({
+    //   timerRun: true
+    // })
+    // πριν είχα αυτή ^^ αλλα επειδή η setState είναι ασύγχρονη και οταν συνταγε το if παρακάτω δεν πέρναγε παρότι το είχαμε ορίσει την αλλάξαμε να γίνει εξίσωση και βάλαμε ολη την λογικη μες στην εξίσωση. αυτό μου εξασφαλίζει οτι δεν θα προχωρήσει πριν να έχει το τελικό state
     this.setState ({
-      timerRun: true
+      timerRun:true
+    }, () => {
+      // countdown logic
+      // asynch problem same as the above setState. Its converted to function
+      let secsTime = this.timeFormaterStringToSecs(this.state.sessionTime)
+      // this.setState({ timerRun: true }, () => {
+      //   let secsTime = this.timeFormaterStringToSecs(this.state.sessionTime);
+      //   console.log("Updated secsTime:", secsTime);
+      // });
+
+      const countdown = () => {
+        if (secsTime >= 0 && this.state.timerRun) {
+        secsTime -= 1
+        let stringTime = this.timeFormaterSecsToString(secsTime)
+        this.parentStateHandler("sessionTime", stringTime)
+        } else {
+          console.log("time is over or pause is pressed")
+          this.parentStateHandler("timerRun", false)
+        }
+        
+        // calls indefinately added && this.state.timerRun
+        if (secsTime >= 0 && this.state.timerRun) {
+          setTimeout(countdown, 1000)
+        }  else {
+          console.log("Countdown stopped.");
+        }
+      }
+
+      /* 
+      εχω μια συνάρτηση μέσα στην συνάρτηση. αλλή αυτή εδώ είναι η πρώτη φορά που καλέιτε. αυτή μου μειώνει τον χρόνο κατα ένα δευτερόλεπτο κάνει render και μετα στο τέλος με το if ξανακαλεί τον εαυτό της με ενα δευτερόλεπτο καθηστέρηση. Ετσι δεν κανω while σε αυγχρονη εφαρμογή
+      */
+      countdown()
     })
-
-    // countdown logic
-    let secsTime = this.timeFormaterStringToSecs(this.state.sessionTime)
-
-    const countdown = () => {
-      if (secsTime >= 0 ) {
-       secsTime -= 1
-       let stringTime = this.timeFormaterSecsToString(secsTime)
-       this.parentStateHandler("sessionTime", stringTime)
-      } else {
-        console.log("times over")
-        this.parentStateHandler("timerRun", false)
-      }
-      
-      if (secsTime >= 0) {
-        setTimeout(countdown, 1000)
-      }
-    }
-
-    // εχω μια συνάρτηση μέσα στην συνάρτηση. αλλή αυτή εδώ είναι η πρώτη φορά που καλέιτε. αυτή μου μειώνει τον χρόνο κατα ένα δευτερόλεπτο κάνει render και μετα στο τέλος με το if ξανακαλεί τον εαυτό της με ενα δευτερόλεπτο καθηστέρηση. Ετσι δεν κανω while σε αυγχρονη εφαρμογή
-    countdown()
   }
 
   timeFormaterStringToSecs = (stringTime) => {
     // ισως να μην θέλει this.state.sessionTime και να βάλω κατι γενικό για να την καλεί
     const time = stringTime.split(":")
-    const secsTime = time[1] + (time[0] * 60)
+    // αυτό έκανε λάθος πρόσθεση ως string πχ "50" + 240 = 50240
+    // const secsTime = time[1] + (time[0] * 60)
+    const mins = parseInt(time[0])
+    const secs = parseInt(time[1])
+    const secsTime = (mins * 60) + secs
     return secsTime
   }
 
@@ -67,6 +85,7 @@ class Displayer extends React.Component {
     return stringTime
   }
 
+  //αυτο έχει να κάνει με την αυτοματη αλλαγή απο τις ρυθμήσεις στο συνολικό χρόνο
   componentDidUpdate(prevProps, prevState) {
     if (prevState.sessionLength !== this.state.sessionLength){
       const stringTime = this.timeFormaterSecsToString(this.state.sessionLength * 60)
@@ -104,6 +123,8 @@ class Displayer extends React.Component {
             sessionTime={this.state.sessionTime}
             parentStateHandler={this.parentStateHandler}
             startTimer={this.startTimer}
+            timeFormaterSecsToString={this.timeFormaterSecsToString}
+            timeFormaterStringToSecs={this.timeFormaterStringToSecs}
           />
         </div>
       </div>
@@ -196,6 +217,8 @@ class Session extends React.Component {
               sessionTime={this.props.sessionTime}
               parentStateHandler={this.props.parentStateHandler}
               startTimer={this.props.startTimer}
+              timeFormaterSecsToString={this.props.timeFormaterSecsToString}
+              timeFormaterStringToSecs={this.props.timeFormaterStringToSecs}
             />
           </div>
         </div>
@@ -207,11 +230,48 @@ class Session extends React.Component {
 class Buttons extends React.Component {
   constructor(props) {
     super(props)
+    this.state = {
+      isPaused: false
+    }
   }
   playHandler = () => {
     console.log("play pressed")
     this.props.startTimer()
   }
+  /*
+    my logic
+      in start timer i format the stringTime to seconds and then the inner method is called
+      it checks if there is time >=0 and if timerun is true and then decrements time by one and updates the state
+              secsTime -= 1
+              let stringTime = this.timeFormaterSecsToString(secsTime)
+              this.parentStateHandler("sessionTime", stringTime)
+      if not it sets timerun to false so as to stop the loop (even if there is still time)
+      in the end it recursivly calls it self with countdown to work as a loop
+
+      when the pause button is pressed
+      it sets inner state to ispaused to true and sets parent state to timerun false
+
+      this should stop the loop of the parent
+          this.props.parentStateHandler("timerRun", false)
+      whne play is pressed again it should call parent startTimer and SHOULD (or not?) continue from where the state was already when paused
+    if (!this.state.isPaused) {
+      this.props.startTimer()
+    }
+  */
+  pauseHandler = () => {
+    console.log("pause pressed")
+    this.setState ({
+      isPaused: true
+    })
+    this.props.parentStateHandler("timerRun", false)
+  }
+
+  restartHandler = () => {
+    console.log("restart pressed")
+    const stringTime = this.props.timeFormaterSecsToString(this.props.sessionLength * 60) 
+    this.props.parentStateHandler ("sessionTime", stringTime)
+  }
+
   render() {
     return (
       <div>
