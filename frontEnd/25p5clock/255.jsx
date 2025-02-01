@@ -2,14 +2,17 @@ class Displayer extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      breakLength: 4,
-      sessionLength: 24,
-      sessionTime: "24:00",
-      timerRun: false
+      breakLength: 1,
+      sessionLength: 2,
+      sessionTime: "00:02",
+      timerRun: false,
+      isInSession: false,
+      isInBreak: false,
     }
   }
 
   startTimer = () => {
+    let round = 0
     console.log("startTimer called")
     if (this.state.timerRun){
       //what to do with multiple starts
@@ -21,18 +24,19 @@ class Displayer extends React.Component {
     // })
     // πριν είχα αυτή ^^ αλλα επειδή η setState είναι ασύγχρονη και οταν συνταγε το if παρακάτω δεν πέρναγε παρότι το είχαμε ορίσει την αλλάξαμε να γίνει εξίσωση και βάλαμε ολη την λογικη μες στην εξίσωση. αυτό μου εξασφαλίζει οτι δεν θα προχωρήσει πριν να έχει το τελικό state
     this.setState ({
-      timerRun:true
+      timerRun:true,
+      isInSession: true,
+      isInBreak: false
     }, () => {
       // countdown logic
       // asynch problem same as the above setState. Its converted to function
-      let secsTime = this.timeFormaterStringToSecs(this.state.sessionTime)
-      // this.setState({ timerRun: true }, () => {
-      //   let secsTime = this.timeFormaterStringToSecs(this.state.sessionTime);
-      //   console.log("Updated secsTime:", secsTime);
-      // });
 
+      // function in function this is main loop logic
       const countdown = () => {
-        if (secsTime >= 0 && this.state.timerRun) {
+        let secsTime = this.timeFormaterStringToSecs(this.state.sessionTime)
+
+      // main countdown loop (restarts by recalling it self every sec setTimeout(countdown, 1000))  
+      if (secsTime >= 0 && this.state.timerRun) {
         secsTime -= 1
         let stringTime = this.timeFormaterSecsToString(secsTime)
         this.parentStateHandler("sessionTime", stringTime)
@@ -42,13 +46,43 @@ class Displayer extends React.Component {
         }
         
         // calls indefinately added && this.state.timerRun
-        if (secsTime >= 0 && this.state.timerRun) {
-          setTimeout(countdown, 1000)
-        }  else {
-          console.log("Countdown stopped.");
-        }
-      }
+        if (secsTime > 0 && this.state.timerRun) {
+          setTimeout(countdown, 1000) //VERY IMPORTAND
 
+        // when time over toggles between break/session and restarts
+        } else if (secsTime === 0) {
+          round += 1
+          console.log("round: ", round)
+          console.log("entered next break/session toggler")
+          console.log("before changing, isInSession: ", this.state.isInSession)
+          /*
+            // We use prevState to ensure we're using the previous state values to update isInSession and isInBreak correctly
+            // React batches state updates, so if we used this.state directly, we might end up with stale state
+          */
+          this.setState(prevState =>({
+            isInSession: !prevState.isInSession,
+            isInBreak: !prevState.isInBreak
+          }), () => {
+            console.log("after changing, isInSession: ", this.state.isInSession)
+            const toggledStatelength = 
+              this.state.isInSession ?
+              this.state.sessionLength :
+              this.state.breakLength ;
+              let stringTime = this.timeFormaterSecsToString(toggledStatelength * 60)
+              console.log("stringTime to be added: ", stringTime)
+            this.setState ({
+              sessionTime : stringTime
+            }, () => {
+              console.log("just before starting loop again: ", this.state)
+              const secsTime = this.timeFormaterStringToSecs(this.state.sessionTime)
+              console.log("just before starting loop again new secs: ", secsTime)
+              countdown()
+            })
+          }) 
+        } else {
+          console.log("Countdown stopped.");
+        } 
+      }
       /* 
       εχω μια συνάρτηση μέσα στην συνάρτηση. αλλή αυτή εδώ είναι η πρώτη φορά που καλέιτε. αυτή μου μειώνει τον χρόνο κατα ένα δευτερόλεπτο κάνει render και μετα στο τέλος με το if ξανακαλεί τον εαυτό της με ενα δευτερόλεπτο καθηστέρηση. Ετσι δεν κανω while σε αυγχρονη εφαρμογή
       */
