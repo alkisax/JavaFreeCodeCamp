@@ -4,7 +4,7 @@ class Displayer extends React.Component {
     this.state = {
       breakLength: 5,
       sessionLength: 25,
-      sessionTime: "25:00",
+      sessionTime: "00:02",
       timerRun: false,
       isInSession: true,
       isInBreak: false,
@@ -35,7 +35,7 @@ class Displayer extends React.Component {
       // asynch problem same as the above setState. Its converted to function
 
       // function in function this is main loop logic
-      const countdown = () => {
+      const countdown2 = () => {
         let secsTime = this.timeFormaterStringToSecs(this.state.sessionTime)
 
         // main countdown loop (restarts by recalling it self every sec setTimeout(countdown, 1000))  
@@ -112,9 +112,63 @@ class Displayer extends React.Component {
       /* 
       εχω μια συνάρτηση μέσα στην συνάρτηση. αλλή αυτή εδώ είναι η πρώτη φορά που καλέιτε. αυτή μου μειώνει τον χρόνο κατα ένα δευτερόλεπτο κάνει render και μετα στο τέλος με το if ξανακαλεί τον εαυτό της με ενα δευτερόλεπτο καθηστέρηση. Ετσι δεν κανω while σε αυγχρονη εφαρμογή
       */
-      countdown()
+      this.countdown()
     })
   }
+
+  countdown = () => {
+    let secsTime = this.timeFormaterStringToSecs(this.state.sessionTime);
+  
+    if (secsTime > 0 && this.state.timerRun) {
+      this.handleTick(secsTime);
+    } else if (secsTime === 0) {
+      this.handleSessionEnd();
+    } else {
+      console.log("Countdown stopped.");
+      this.parentStateHandler("timerRun", false);
+    }
+  };
+
+  handleTick = (secsTime) => {
+    setTimeout(() => {
+      this.setState((prevState) => {
+        let updatedSecs = this.timeFormaterStringToSecs(prevState.sessionTime) - 1;
+        if (updatedSecs < 0) updatedSecs = 0; // Prevent negative time
+        return { sessionTime: this.timeFormaterSecsToString(updatedSecs) };
+      });
+  
+      this.countdown();
+    }, 1000);
+  };
+    
+  handleSessionEnd = () => {
+    console.log("Session ended. Switching to break/session.");
+    this.playBeep();
+  
+    this.setState((prevState) => ({
+      isInSession: !prevState.isInSession,
+      isInBreak: !prevState.isInBreak,
+    }), () => {
+      const nextDuration = this.state.isInSession ? this.state.sessionLength : this.state.breakLength;
+      this.setState({
+        sessionTime: this.timeFormaterSecsToString(nextDuration * 60),
+      }, () => {
+        console.log("Starting new round.");
+        this.countdown();
+      });
+    });
+  };
+    
+  playBeep = () => {
+    console.log("Timer reached 00:00, playing beep...");
+    const audio = document.getElementById("beep");
+    if (audio) {
+      audio.currentTime = 0; // Reset in case it was already playing
+      setTimeout(() => {
+        audio.play().catch(error => console.error("Audio play error:", error));
+      }, 100);
+    }
+  };
 
   timeFormaterStringToSecs = (stringTime) => {
     // ισως να μην θέλει this.state.sessionTime και να βάλω κατι γενικό για να την καλεί
