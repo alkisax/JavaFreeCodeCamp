@@ -58,6 +58,11 @@ class Displayer extends React.Component {
   };
 
   handleTick = (secsTime) => {
+    if (!this.state.timerRun) {
+      console.log("Timer paused, no more ticks.");
+      return; // Stop further ticks when the timer is paused
+    }
+
     this.timer = setTimeout(() => {
       this.setState((prevState) => {
         let updatedSecs = this.timeFormaterStringToSecs(prevState.sessionTime) - 1;
@@ -69,6 +74,11 @@ class Displayer extends React.Component {
           console.log("(tick log) state BEFORE sessionTime: ", this.state.sessionTime)
         }
 
+        if (!this.state.timerRun) {
+          console.log("Timer paused, no more ticks.");
+          return; // Stop further ticks when the timer is paused
+        }
+        
         this.parentStateHandler("sessionTime", newSessionTime, () => {
           if (updatedSecs < 5) {
             console.log("(tick log) state AFTER sessionTime: ", this.state.sessionTime)
@@ -360,8 +370,8 @@ class Buttons extends React.Component {
   pauseHandler = () => {
     console.log("Pause/Resume pressed");
 
-      // Stop the countdown immediately
-  clearTimeout(this.timer);
+    // Stop the countdown immediately
+    clearTimeout(this.timer);
   
     this.setState(
       (prevState) => ({ isPaused: !prevState.isPaused }), // Toggle pause state
