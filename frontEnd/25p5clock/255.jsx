@@ -4,7 +4,7 @@ class Displayer extends React.Component {
     this.state = {
       breakLength: 5,
       sessionLength: 25,
-      sessionTime: "00:02",
+      sessionTime: "25:00",
       timerRun: false,
       isInSession: true,
       isInBreak: false,
@@ -19,13 +19,15 @@ class Displayer extends React.Component {
     }
 
     const initialSessionTime = this.timeFormaterSecsToString(this.state.sessionLength * 60);
-
+    
+    console.log("Parent BEFORE timerRun:", this.state.timerRun);
     this.setState ({
       sessionTime: initialSessionTime, // Set sessionTime correctly
       timerRun:true,
       isInSession: true,
       isInBreak: false,
     }, () => {
+      console.log("Parent AFTER timerRun:", this.state.timerRun);
       this.countdown()
     })
   }
@@ -162,6 +164,7 @@ class Displayer extends React.Component {
             sessionLength={this.state.sessionLength}
             breakLength={this.state.breakLength}
             sessionTime={this.state.sessionTime}
+            timerRun={this.state.timerRun}
             parentStateHandler={this.parentStateHandler}
             startTimer={this.startTimer}
             timeFormaterSecsToString={this.timeFormaterSecsToString}
@@ -273,6 +276,7 @@ class Session extends React.Component {
               sessionLength={this.props.sessionLength}
               breakLength={this.props.breakLength}
               sessionTime={this.props.sessionTime}
+              timerRun={this.props.timerRun}
               parentStateHandler={this.props.parentStateHandler}
               startTimer={this.props.startTimer}
               timeFormaterSecsToString={this.props.timeFormaterSecsToString}
@@ -294,9 +298,29 @@ class Buttons extends React.Component {
     }
   }
   playHandler = () => {
-    console.log("play pressed")
-    this.props.startTimer()
-  }
+    console.log("play pressed");
+    console.log("isPaused: ",this.state.isPaused)
+  
+    if (this.state.isPaused) {
+      // Resume the timer if it's paused
+      this.pauseHandler()
+    } else {
+      if (this.props.timerRun) {
+        // Pause the timer if it's running
+        console.log("pause handler called from start handler")
+        console.log("this.props.timerRun",this.props.timerRun)
+        console.log("this.state.isPaused",this.state.isPaused)
+        this.pauseHandler()
+      } else {
+        // Start the timer if it's not running
+        console.log("BEFORE this.props.timerRun",this.props.timerRun)
+        this.props.startTimer();
+        console.log("AFTER this.props.timerRun",this.props.timerRun)
+      }
+    }
+  };
+  
+
   /*
     my logic
       in start timer i format the stringTime to seconds and then the inner method is called
