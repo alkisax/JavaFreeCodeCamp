@@ -58,7 +58,7 @@ class Displayer extends React.Component {
   };
 
   handleTick = (secsTime) => {
-    setTimeout(() => {
+    this.timer = setTimeout(() => {
       this.setState((prevState) => {
         let updatedSecs = this.timeFormaterStringToSecs(prevState.sessionTime) - 1;
         if (updatedSecs < 0) updatedSecs = 0; // Prevent negative time
@@ -343,6 +343,9 @@ class Buttons extends React.Component {
   */
   pauseHandler = () => {
     console.log("Pause/Resume pressed");
+
+      // Stop the countdown immediately
+  clearTimeout(this.timer);
   
     this.setState(
       (prevState) => ({ isPaused: !prevState.isPaused }), // Toggle pause state
