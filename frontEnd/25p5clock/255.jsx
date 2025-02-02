@@ -62,7 +62,8 @@ class Displayer extends React.Component {
       this.setState((prevState) => {
         let updatedSecs = this.timeFormaterStringToSecs(prevState.sessionTime) - 1;
         if (updatedSecs < 0) updatedSecs = 0; // Prevent negative time
-        return { sessionTime: this.timeFormaterSecsToString(updatedSecs) };
+        const newSessionTime = this.timeFormaterSecsToString(updatedSecs);
+        return { sessionTime: newSessionTime };
       });
   
       this.countdown();
@@ -76,6 +77,7 @@ class Displayer extends React.Component {
     this.setState((prevState) => ({
       isInSession: !prevState.isInSession,
       isInBreak: !prevState.isInBreak,
+      
     }), () => {
       const nextDuration = this.state.isInSession ? this.state.sessionLength : this.state.breakLength;
       this.setState({
@@ -318,8 +320,7 @@ class Buttons extends React.Component {
         console.log("AFTER this.props.timerRun",this.props.timerRun)
       }
     }
-  };
-  
+  };  
 
   /*
     my logic
