@@ -63,7 +63,17 @@ class Displayer extends React.Component {
         let updatedSecs = this.timeFormaterStringToSecs(prevState.sessionTime) - 1;
         if (updatedSecs < 0) updatedSecs = 0; // Prevent negative time
         const newSessionTime = this.timeFormaterSecsToString(updatedSecs);
-        return { sessionTime: newSessionTime };
+
+        if (updatedSecs < 5) {
+          console.log("secs to finish: ", updatedSecs)
+          console.log("(tick log) state BEFORE sessionTime: ", this.state.sessionTime)
+        }
+
+        this.parentStateHandler("sessionTime", newSessionTime, () => {
+          if (updatedSecs < 5) {
+            console.log("(tick log) state AFTER sessionTime: ", this.state.sessionTime)
+          }
+        })
       });
   
       this.countdown();
@@ -71,22 +81,27 @@ class Displayer extends React.Component {
   };
     
   handleSessionEnd = () => {
-    console.log("Session ended. Switching to break/session.");
-    this.playBeep();
-  
-    this.setState((prevState) => ({
-      isInSession: !prevState.isInSession,
-      isInBreak: !prevState.isInBreak,
-      
-    }), () => {
-      const nextDuration = this.state.isInSession ? this.state.sessionLength : this.state.breakLength;
-      this.setState({
-        sessionTime: this.timeFormaterSecsToString(nextDuration * 60),
-      }, () => {
-        console.log("Starting new round.");
-        this.countdown();
+
+    console.log("(session end log) state AFTER sessionTime: ", this.state.sessionTime)
+
+    setTimeout(() => {
+      console.log("Session ended. Switching to break/session.");
+      this.playBeep();
+    
+      this.setState((prevState) => ({
+        isInSession: !prevState.isInSession,
+        isInBreak: !prevState.isInBreak,
+        
+      }), () => {
+        const nextDuration = this.state.isInSession ? this.state.sessionLength : this.state.breakLength;
+        this.setState({
+          sessionTime: this.timeFormaterSecsToString(nextDuration * 60),
+        }, () => {
+          console.log("Starting new round.");
+          this.countdown();
+        });
       });
-    });
+    }, 100)
   };
     
   playBeep = () => {
@@ -137,10 +152,10 @@ class Displayer extends React.Component {
     }
   }
 
-  parentStateHandler = (property, value) => {
+  parentStateHandler = (property, value, callback = () => {}) => {
     this.setState ({
       [property] : value
-    })
+    }, callback)
   }
 
   render() {
