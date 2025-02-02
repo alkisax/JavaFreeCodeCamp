@@ -19,13 +19,14 @@ class Displayer extends React.Component {
       return
     }
 
-    
+    const initialSessionTime = this.timeFormaterSecsToString(this.state.sessionLength * 60);
 
     // this.setState ({
     //   timerRun: true
     // })
     // πριν είχα αυτή ^^ αλλα επειδή η setState είναι ασύγχρονη και οταν συνταγε το if παρακάτω δεν πέρναγε παρότι το είχαμε ορίσει την αλλάξαμε να γίνει εξίσωση και βάλαμε ολη την λογικη μες στην εξίσωση. αυτό μου εξασφαλίζει οτι δεν θα προχωρήσει πριν να έχει το τελικό state
     this.setState ({
+      sessionTime: initialSessionTime, // Set sessionTime correctly
       timerRun:true,
       isInSession: true,
       isInBreak: false,
