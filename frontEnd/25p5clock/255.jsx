@@ -12,7 +12,7 @@ class Displayer extends React.Component {
   }
 
   startTimer = () => {
-    // let round = 0
+
     console.log("startTimer called")
     if (this.state.timerRun){
       return
@@ -29,6 +29,18 @@ class Displayer extends React.Component {
       this.countdown()
     })
   }
+
+  resumeTimer = () => {
+    console.log("resumeTimer called");
+  
+    if (this.state.timerRun) {
+      return; // If already running, don't restart
+    }
+  
+    this.setState({ timerRun: true }, () => {
+      this.countdown(); // Just continue decrementing the existing time
+    });
+  };
 
   countdown = () => {
     let secsTime = this.timeFormaterStringToSecs(this.state.sessionTime);
@@ -155,6 +167,7 @@ class Displayer extends React.Component {
             timeFormaterSecsToString={this.timeFormaterSecsToString}
             timeFormaterStringToSecs={this.timeFormaterStringToSecs}
             isInSession={this.state.isInSession}
+            resumeTimer={this.resumeTimer}
           />
         </div>
 
@@ -264,6 +277,7 @@ class Session extends React.Component {
               startTimer={this.props.startTimer}
               timeFormaterSecsToString={this.props.timeFormaterSecsToString}
               timeFormaterStringToSecs={this.props.timeFormaterStringToSecs}
+              resumeTimer={this.props.resumeTimer}
             />
           </div>
         </div>
@@ -304,12 +318,18 @@ class Buttons extends React.Component {
     }
   */
   pauseHandler = () => {
-    console.log("pause pressed")
-    this.setState ({
-      isPaused: true
-    })
-    this.props.parentStateHandler("timerRun", false)
-  }
+    console.log("Pause/Resume pressed");
+  
+    this.setState(
+      (prevState) => ({ isPaused: !prevState.isPaused }), // Toggle pause state
+      () => {
+        this.props.parentStateHandler("timerRun", !this.state.isPaused); // Resume or pause based on state
+        if (!this.state.isPaused) {
+          this.props.resumeTimer(); // Resume if unpaused
+        }
+      }
+    );
+  };
 
   restartHandler = () => {
     console.log("restart pressed")
