@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+
+  <h1 id="title">title</h1>
+  <p id="description">
+    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Explicabo temporibus magnam veniam quam perferendis molestias ex culpa nostrum assumenda voluptatem aut qui, rerum ab perspiciatis quasi rem eius dignissimos tenetur!
+  </p>
+  <form action="" id="survey-form">
+    <label for="name" id="name-label">name:
+      <input id="name" type="text" placeholder="name" required>
+    </label>
+    <label for="email" id="email-label">email:
+      <input type="email" id="email" placeholder="example@sth.com" required>
+    </label>
+    <label for="number" id="number-label">Num:
+      <input type="number" id="number" min="0" max="10" placeholder="7">
+    </label>
+    <label for="country" id="country"></label>
+    <select name="country" id="dropdown">
+      <option value="">--Please select a country--</option>
+      <option value="tr">Turkiye</option>
+      <option value="gr">Greec</option>
+      <option value="md">N. Macedonia</option>
+      <option value="al">Albania</option>
+      <option value="bu">Bulgaria</option>
+      <option value="ro">Romania</option>
+      <option value="sr">Serbia</option>
+      <option value="mg">Montenegro</option>
+      <option value="bh">Bosnia</option>
+      <option value="cr">Croatia</option>
+      <option value="sl">Slovenia</option>
+    </select>
+
+    <label>
+      <input type="radio" name="color" value="red">
+      Red
+    </label>
+    <label>
+      <input type="radio" name="color" value="blue">
+      Blue
+    </label>
+
+    <label for="">Baclava is form:</label>
+    <label>
+      <input type="checkbox" name="food" value="tr">
+      Turkiye
+    </label>
+    <label>
+      <input type="checkbox" name="food" value="gr">
+      Greece
+    </label>
+        <label>
+      <input type="checkbox" name="food" value="al">
+      Albania
+    </label>
+    <label>
+      <input type="checkbox" name="food" value="Balkan">
+      Balkan
+    </label>
+
+    <label for="text-area" id="text-area-label">
+      any comments?
+      <textarea name="text-area" id="text-area"></textarea>
+    </label>
+
+    <input type="submit" id="submit">
+    
+  </form>
+  
+</body>
+</html>
